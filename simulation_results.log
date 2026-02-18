@@ -1,0 +1,242 @@
+Hydra-Cool Simulation Report
+============================
+Date: Wed Feb 18 18:31:09 2026
+
+
+==================================================
+RUNNING SCENARIO: A01_baseline_physics.py
+==================================================
+Hydra-Cool A01: Running Baseline Physics Simulation...
+[-] Intake Temp: 5.0°C -> Density: 1027.74 kg/m³
+[-] Outlet Temp: 50.0°C -> Density: 1015.36 kg/m³
+[-] Density Delta (Δρ): 12.39 kg/m³
+[+] Saved visualization to: ../../assets/A01_buoyancy_physics.png
+----------------------------------------
+SIMULATION RESULTS:
+At 50m tower:  6.08 kPa
+At 100m tower: 12.15 kPa
+At 200m tower: 24.31 kPa
+----------------------------------------
+
+[Status: SUCCESS] [Time: 0.70s]
+
+==================================================
+RUNNING SCENARIO: A02_hydraulic_balance.py
+==================================================
+Hydra-Cool A02: Running Hydraulic Balance Simulation...
+[-] Flow Rate: 626.1 kg/s (0.61 m³/s)
+[-] Velocity:  0.54 m/s (in 1.2m pipe)
+[+] Saved visualization to: ../../assets/A02_hydraulic_balance.png
+----------------------------------------
+Total Head Required: 1054.04 kPa
+  - Static Lift: 998.16 kPa (94.7%)
+  - Friction:    5.13 kPa
+  - Minor+HX:    50.75 kPa
+Est Pump Power: 757.45 kW
+----------------------------------------
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: A03_height_optimization.py
+==================================================
+Hydra-Cool A03: Running Tower Height Optimization...
+Flow: 626.1 kg/s. Delta_Rho: 10.25 kg/m³
+Natural Buoyancy Head (from 500.0m depth): 5.04 m
+[+] Saved visualization to: ../../assets/A03_height_opt.png
+Max Net Power: -3.74 kW at 10.0 m
+
+[Status: SUCCESS] [Time: 0.55s]
+
+==================================================
+RUNNING SCENARIO: A04_temp_sensitivity.py
+==================================================
+Hydra-Cool A04: Running Temperature Sensitivity...
+Breakeven at ΔT = 53.16°C
+[+] Saved visualization to: ../../assets/A04_temp_sensitivity.png
+
+[Status: SUCCESS] [Time: 0.54s]
+
+==================================================
+RUNNING SCENARIO: A05_pipe_diameter.py
+==================================================
+Hydra-Cool A05: Running Pipe Diameter Analysis...
+[+] Saved visualization to: ../../assets/A05_pipe_diameter.png
+
+[Status: SUCCESS] [Time: 0.54s]
+
+==================================================
+RUNNING SCENARIO: B01_baseline_comparison.py
+==================================================
+Hydra-Cool B01: Baseline Systems Comparison...
+[+] Saved visualization to: ../../assets/B01_baseline_comparison.png
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: B02_hydra_vs_baseline.py
+==================================================
+Hydra-Cool B02: Running Net Energy Comparison...
+[+] Saved visualization to: ../../assets/B02_hydra_vs_baseline.png
+------------------------------
+Hydra-Cool Cooling Power: 0.05 MW
+Annual Savings vs Air: $38.51 Million
+------------------------------
+
+[Status: SUCCESS] [Time: 0.60s]
+
+==================================================
+RUNNING SCENARIO: B03_retrofit_vs_greenfield.py
+==================================================
+Hydra-Cool B03: Retrofit vs Greenfield Analysis...
+[+] Saved visualization to: ../../assets/B03_retrofit_vs_greenfield.png
+
+[Status: SUCCESS] [Time: 0.55s]
+
+==================================================
+RUNNING SCENARIO: B04_geographic_suitability.py
+==================================================
+Hydra-Cool B04: Geographic Suitability Analysis...
+[+] Saved visualization to: ../../assets/B04_geographic_suitability.png
+Suitability Analysis:
+ - Oslo (Norway): PRIME (Dist: 2.0km)
+ - Monterey (USA): PRIME (Dist: 5.0km)
+ - Tokyo (Japan): FEASIBLE (Dist: 25.0km)
+ - Helsinki (Fin): UNVIABLE (Dist: 100.0km)
+ - Dubai (UAE): UNVIABLE (Dist: 250.0km)
+ - Singapore: UNVIABLE (Dist: 300.0km)
+
+[Status: SUCCESS] [Time: 0.56s]
+
+==================================================
+RUNNING SCENARIO: C01_capex_estimation.py
+==================================================
+Hydra-Cool C01: Running CAPEX Estimation...
+[+] Saved visualization to: ../../assets/C01_capex_estimation.png
+------------------------------
+Base Case CAPEX: $458.6 Million
+Cost per MW: $4.59 Million/MW
+------------------------------
+
+[Status: SUCCESS] [Time: 0.59s]
+
+==================================================
+RUNNING SCENARIO: C02_opex_annual.py
+==================================================
+Hydra-Cool C02: Running OPEX Analysis...
+[+] Saved visualization to: ../../assets/C02_opex_annual.png
+------------------------------
+Air OPEX: $40.5M
+Hydra OPEX: $2.5M
+Annual Savings: $38.0M
+------------------------------
+
+[Status: SUCCESS] [Time: 0.55s]
+
+==================================================
+RUNNING SCENARIO: C03_tco_20year.py
+==================================================
+Hydra-Cool C03: Running TCO Analysis...
+[+] Saved visualization to: ../../assets/C03_tco_20year.png
+Breakeven Time: 0.64 Years
+
+[Status: SUCCESS] [Time: 0.54s]
+
+==================================================
+RUNNING SCENARIO: C04_payback_period.py
+==================================================
+Hydra-Cool C04: Running Payback Period Analysis...
+[+] Saved visualization to: ../../assets/C04_payback_period.png
+
+[Status: SUCCESS] [Time: 0.51s]
+
+==================================================
+RUNNING SCENARIO: D01_water_hammer.py
+==================================================
+Hydra-Cool D01: Running Water Hammer Analysis...
+Critical Closure Time: 6.0 s
+Max Surge Head (Instant): 6.2 bar
+[+] Saved visualization to: ../../assets/D01_water_hammer.png
+
+[Status: SUCCESS] [Time: 0.51s]
+
+==================================================
+RUNNING SCENARIO: D02_biofouling_impact.py
+==================================================
+Hydra-Cool D02: Running Biofouling Analysis...
+[+] Saved visualization to: ../../assets/D02_biofouling_impact.png
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: D03_corrosion_material_selection.py
+==================================================
+Hydra-Cool D03: Running Material Selection...
+[+] Saved visualization to: ../../assets/D03_material_selection.png
+
+[Status: SUCCESS] [Time: 0.60s]
+
+==================================================
+RUNNING SCENARIO: D04_thermal_plume.py
+==================================================
+Hydra-Cool D04: Running Thermal Plume Analysis...
+[+] Saved visualization to: ../../assets/D04_thermal_plume.png
+Mixing Zone Radius (<3°C): 90.9 m
+
+[Status: SUCCESS] [Time: 0.55s]
+
+==================================================
+RUNNING SCENARIO: D05_seismic_risk.py
+==================================================
+Hydra-Cool D05: Running Seismic Risk Analysis...
+[+] Saved visualization to: ../../assets/D05_seismic_risk.png
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: D06_system_failure_modes.py
+==================================================
+Hydra-Cool D06: Running Failure Mode Analysis...
+[+] Saved visualization to: ../../assets/D06_failure_modes.png
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: E01_geographic_constraints.py
+==================================================
+Hydra-Cool E01: Running Geographic Market Analysis...
+[+] Saved visualization to: ../../assets/E01_geographic_constraint.png
+
+[Status: SUCCESS] [Time: 0.50s]
+
+==================================================
+RUNNING SCENARIO: E02_economic_stress_test.py
+==================================================
+Hydra-Cool E02: Running Economic Stress Test...
+[+] Saved visualization to: ../../assets/E02_stress_test.png
+
+[Status: SUCCESS] [Time: 0.55s]
+
+==================================================
+RUNNING SCENARIO: E03_permitting_legal.py
+==================================================
+Hydra-Cool E03: Running Permitting Risk Analysis...
+[+] Saved visualization to: ../../assets/E03_permitting_risk.png
+
+[Status: SUCCESS] [Time: 0.51s]
+
+==================================================
+RUNNING SCENARIO: F01_immersion_cooling.py
+==================================================
+Hydra-Cool F01: Running Immersion Cooling Analysis...
+[+] Saved visualization to: ../../assets/F01_immersion_cooling.png
+
+[Status: SUCCESS] [Time: 0.52s]
+
+==================================================
+RUNNING SCENARIO: F02_scalability.py
+==================================================
+Hydra-Cool F02: Running Scalability Analysis...
+[+] Saved visualization to: ../../assets/F02_scalability.png
+
+[Status: SUCCESS] [Time: 0.64s]
