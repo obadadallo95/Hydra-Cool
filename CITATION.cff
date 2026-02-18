@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Dallo"
+  given-names: "Obada"
+  role: "Lead Engineer"
+title: "Hydra-Cool: Brownfield Retrofit Simulation Engine"
+version: 28.0.0
+date-released: 2024-10-25
+url: "https://github.com/hydra-cool/simulation"
+abstract: >
+  A Python-based simulation engine for analyzing the feasibility of retrofitting 
+  coastal hyperscale data centers with thermosiphon-driven seawater cooling 
+  and hydro-electric energy recovery. Includes models for financial ROI, 
+  transient hydraulic physics, and risk analysis.
+keywords:
+  - "data center cooling"
+  - "thermosiphon"
+  - "hydro-electric recovery"
+  - "brownfield retrofit"
+  - "sustainability"
+license: MIT
