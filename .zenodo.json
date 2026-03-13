@@ -1,0 +1,27 @@
+{
+  "title": "Hydra-Cool: Buoyancy-Assisted Retrofit Cooling for Hyperscale Data Centers",
+  "creators": [
+    {
+      "name": "Dallo, Obada",
+      "affiliation": "Hydra-Cool Open Research Project"
+    }
+  ],
+  "description": "<p>Hydra-Cool is an open engineering research project exploring buoyancy-assisted seawater retrofit cooling for coastal hyperscale data centers. The repository includes staged simulation campaigns, high-resolution parameter sweep studies, publication-grade figures, manuscript materials, and citation metadata for evaluating feasible design windows and hydraulic constraints.</p><p>The current scientific framing treats Hydra-Cool primarily as a hybrid retrofit assist architecture rather than as a universally passive standalone replacement.</p>",
+  "license": "MIT",
+  "upload_type": "software",
+  "publication_date": "2026-03-13",
+  "keywords": [
+    "data center cooling",
+    "buoyancy-assisted flow",
+    "seawater cooling",
+    "retrofit cooling",
+    "thermosiphon",
+    "hyperscale data centers",
+    "engineering simulation"
+  ],
+  "access_right": "open",
+  "version": "v2026.1",
+  "language": "eng",
+  "communities": [],
+  "notes": "Concept origin: Obada Dallo (2026). Hydra-Cool open engineering research project."
+}

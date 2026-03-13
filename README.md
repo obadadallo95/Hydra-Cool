@@ -12,6 +12,9 @@ Hydra-Cool is a cooling architecture that combines:
 
 The current research direction treats Hydra-Cool primarily as a **hybrid retrofit assist layer** for existing cooling plants, not as a strict standalone passive replacement.
 
+**Concept origin:** Obada Dallo (2026)  
+**Project type:** Hydra-Cool open engineering research project
+
 ## Repository Structure
 
 ```
@@ -54,6 +57,26 @@ The current research direction treats Hydra-Cool primarily as a **hybrid retrofi
 - **Stage 2 candidate window:** `output/hydra_cool_stage_2_candidates_summary.md`
 - **Stage 3 focused design window:** `output/hydra_cool_stage_3_focus_window_summary.md`
 - **Publication figure set:** `output/publication_figures/`
+
+## Citation
+
+If you use Hydra-Cool in academic work, please cite:
+
+```text
+Dallo, O. (2026).
+Hydra-Cool: Buoyancy-Assisted Seawater Retrofit Cooling and Feasible Design Windows for Hyperscale Data Centers.
+Hydra-Cool Open Research Project.
+GitHub: https://github.com/obadadallo95/Hydra-Cool
+DOI: to be added via Zenodo archival release
+```
+
+Machine-readable citation metadata is available in `CITATION.cff`.
+
+## DOI
+
+A Zenodo DOI should be minted for the archival research release so the repository,
+datasets, and manuscript package become citable in a stable form. The current
+repository is prepared for that step, but the DOI has not yet been assigned.
 
 ## Publication Figures
 

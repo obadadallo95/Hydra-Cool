@@ -1,22 +1,36 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
+message: "If you use Hydra-Cool in academic work, please cite it as below."
+title: "Hydra-Cool: Buoyancy-Assisted Retrofit Cooling for Hyperscale Data Centers"
+type: software
 authors:
-- family-names: "Dallo"
-  given-names: "Obada"
-  role: "Lead Engineer"
-title: "Hydra-Cool: Brownfield Retrofit Simulation Engine"
-version: 28.0.0
-date-released: 2024-10-25
-url: "https://github.com/hydra-cool/simulation"
+  - family-names: "Dallo"
+    given-names: "Obada"
+    affiliation: "Hydra-Cool Open Research Project"
+repository-code: "https://github.com/obadadallo95/Hydra-Cool"
+url: "https://github.com/obadadallo95/Hydra-Cool"
+version: "2026.1"
+date-released: 2026-03-13
+license: MIT
 abstract: >
-  A Python-based simulation engine for analyzing the feasibility of retrofitting 
-  coastal hyperscale data centers with thermosiphon-driven seawater cooling 
-  and hydro-electric energy recovery. Includes models for financial ROI, 
-  transient hydraulic physics, and risk analysis.
+  Hydra-Cool is an open engineering research project exploring buoyancy-assisted
+  seawater retrofit cooling for coastal hyperscale data centers. The repository
+  includes staged simulation campaigns, high-resolution parameter sweep datasets,
+  publication-grade figures, and manuscript materials for evaluating feasible
+  design windows and hydraulic constraints.
 keywords:
   - "data center cooling"
+  - "buoyancy-assisted flow"
+  - "seawater cooling"
+  - "retrofit cooling"
   - "thermosiphon"
-  - "hydro-electric recovery"
-  - "brownfield retrofit"
-  - "sustainability"
-license: MIT
+  - "hyperscale data centers"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Dallo"
+      given-names: "Obada"
+  title: "Hydra-Cool: Buoyancy-Assisted Seawater Retrofit Cooling and Feasible Design Windows for Hyperscale Data Centers"
+  year: 2026
+  journal: "Hydra-Cool Open Research Manuscript"
+  url: "https://github.com/obadadallo95/Hydra-Cool"
+  note: "Add Zenodo DOI after archive publication."
