@@ -8,6 +8,7 @@ authors:
     affiliation: "Hydra-Cool Open Research Project"
 repository-code: "https://github.com/obadadallo95/Hydra-Cool"
 url: "https://github.com/obadadallo95/Hydra-Cool"
+doi: "10.5281/zenodo.18999303"
 version: "2026.1"
 date-released: 2026-03-13
 license: MIT
@@ -33,4 +34,4 @@ preferred-citation:
   year: 2026
   journal: "Hydra-Cool Open Research Manuscript"
   url: "https://github.com/obadadallo95/Hydra-Cool"
-  note: "Add Zenodo DOI after archive publication."
+  doi: "10.5281/zenodo.18999303"

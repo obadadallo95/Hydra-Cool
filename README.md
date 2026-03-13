@@ -67,16 +67,19 @@ Dallo, O. (2026).
 Hydra-Cool: Buoyancy-Assisted Seawater Retrofit Cooling and Feasible Design Windows for Hyperscale Data Centers.
 Hydra-Cool Open Research Project.
 GitHub: https://github.com/obadadallo95/Hydra-Cool
-DOI: to be added via Zenodo archival release
+DOI: 10.5281/zenodo.18999303
 ```
 
 Machine-readable citation metadata is available in `CITATION.cff`.
 
 ## DOI
 
-A Zenodo DOI should be minted for the archival research release so the repository,
-datasets, and manuscript package become citable in a stable form. The current
-repository is prepared for that step, but the DOI has not yet been assigned.
+Zenodo archival DOI for this release:
+
+**10.5281/zenodo.18999303**
+
+Zenodo record:
+https://doi.org/10.5281/zenodo.18999303
 
 ## Publication Figures
 

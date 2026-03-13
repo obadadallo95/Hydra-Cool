@@ -92,7 +92,7 @@ Dallo, O. (2026).
 Hydra-Cool: Buoyancy-Assisted Seawater Retrofit Cooling and Feasible Design Windows for Hyperscale Data Centers.
 Hydra-Cool Open Research Project.
 GitHub: https://github.com/obadadallo95/Hydra-Cool
-DOI: to be assigned by Zenodo for this archival release.
+DOI: 10.5281/zenodo.18999303
 ```
 
 ## Concept Origin
