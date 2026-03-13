@@ -29,7 +29,19 @@ This manuscript presents the current state of the Hydra-Cool simulation campaign
 3. To identify the hydraulic variables that dominate success and failure.
 4. To produce publication-grade visual outputs for transparent scientific communication.
 
-## 2. Physical Basis
+## 2. Related Work
+
+Hydra-Cool sits at the intersection of several established engineering literature streams, but it is not identical to any one of them. The first relevant body of work is the broad literature on data center cooling systems, including conventional mechanical plants, economizer strategies, and the transition toward direct liquid cooling for high-density computing. Reviews of data center thermal management consistently show that cooling efficiency depends not only on the heat sink itself, but also on how effectively the system reduces transport losses from chip scale to plant scale [3,5,6,11]. This literature provides the baseline context against which Hydra-Cool must be interpreted: not as a replacement for all cooling architectures, but as one candidate approach for lowering the energy burden of heat rejection in specific coastal settings.
+
+The second literature stream concerns thermosiphons, natural-circulation loops, and buoyancy-driven heat transport. Thermosiphon and natural-circulation systems have long been studied in thermal engineering because they can move heat with limited or even no active pumping under favorable geometric and thermal conditions [4,9]. That literature is directly relevant to Hydra-Cool because the project relies on the same underlying physical idea that density differences can generate useful circulation pressure. At the same time, most thermosiphon research is not written for data center plant retrofits, nor is it generally framed around large marine heat-rejection loops serving hyperscale digital infrastructure.
+
+The third relevant stream is seawater-based cooling and coastal thermal infrastructure. Sea water air conditioning and related marine heat-rejection concepts show that cold seawater can be an effective thermal resource where geography and civil design permit [10]. These systems demonstrate that marine cooling can be technically meaningful, but they are usually analyzed as pumped heat-rejection infrastructure or district-scale cooling systems rather than buoyancy-assisted retrofit loops for existing data center plants.
+
+Hydra-Cool therefore overlaps conceptually with standard seawater cooling, natural circulation, and thermosiphon behavior, but it should not be reduced to any of them. It is not simply a pumped seawater loop, because it explicitly seeks hydraulic assistance from buoyancy and gravity. It is not simply a passive thermosiphon, because the dominant viable operating mode in the repository is `HYBRID_RETROFIT_ASSIST`, not universal passive standalone circulation. It is also not just a generic marine cooling proposal, because its central framing is that of a **retrofit hydraulic-assist architecture** integrated with large coastal data center cooling systems.
+
+The gap addressed by Hydra-Cool is therefore narrow but scientifically defensible: existing work covers seawater cooling, natural circulation, and thermosiphon behavior, but limited work frames these ideas explicitly as a retrofit-assist hydraulic architecture for large coastal data center cooling systems.
+
+## 3. Physical Basis
 
 The Hydra-Cool model is built on five governing physical elements:
 
@@ -70,9 +82,9 @@ Supporting derivations and assumptions are documented in:
 - [PHYSICS_BASIS.md](/Users/obadadallo/Desktop/Cooling_System_Sim/cooling_project/docs/PHYSICS_BASIS.md)
 - [ASSUMPTIONS.md](/Users/obadadallo/Desktop/Cooling_System_Sim/cooling_project/docs/ASSUMPTIONS.md)
 
-## 3. Methods
+## 4. Methods
 
-### 3.1 System interpretation
+### 4.1 System interpretation
 
 The current simulation campaign treats Hydra-Cool primarily as a **retrofit assist layer** for an existing cooling system. This distinction is central. A scenario is not required to support purely passive circulation to be useful. Instead, the principal test is whether buoyancy and gravity materially offset the energy demand of a legacy cooling plant while remaining hydraulically feasible.
 
@@ -82,7 +94,7 @@ Three success layers are tracked explicitly:
 2. `HYBRID_RETROFIT_ASSIST`: the loop remains hydraulically useful, but pump assistance is still required.
 3. `TURBINE_RECOVERY_ACTIVE`: optional energy recovery is present; this is treated as a beneficial secondary effect rather than a core success condition.
 
-### 3.2 Stage-based campaign design
+### 4.2 Stage-based campaign design
 
 The simulation was reorganized into three stages to avoid the problem of exploring large numbers of scenarios without improving the design direction.
 
@@ -94,7 +106,7 @@ The simulation was reorganized into three stages to avoid the problem of explori
 
 The progression from Stage 1 to Stage 3 is deliberate. Stage 1 is exploratory. Stage 2 discards scenarios that do not advance the concept. Stage 3 concentrates computational effort inside the most promising design region.
 
-### 3.3 Parameter space
+### 4.3 Parameter space
 
 The high-resolution window was chosen around the most useful development region identified by the earlier screening work:
 
@@ -106,7 +118,7 @@ The high-resolution window was chosen around the most useful development region 
 
 This pruning strategy is important because the value of the campaign lies not in raw scenario count, but in progressive elimination of non-productive parts of the design space.
 
-### 3.4 Classification logic
+### 4.4 Classification logic
 
 Each scenario is evaluated for:
 
@@ -131,7 +143,7 @@ Scenarios now fail explicitly when either of the following conditions is violate
 
 When both are present, the primary reported failure mode is **INSUFFICIENT_VELOCITY**.
 
-### 3.5 Phase 2 scientific hardening
+### 4.5 Phase 2 scientific hardening
 
 Phase 2 of the repository focused on scientific hardening of the Stage 3 focused design window. In this update, Hydra-Cool was formalized primarily as a `HYBRID_RETROFIT_ASSIST` architecture while retaining passive-natural circulation as a reportable but secondary operating class. The simulation engine was revised so that total assisted cooling power is evaluated as
 
@@ -141,13 +153,13 @@ $$
 
 and retrofit savings are computed relative to the baseline cooling burden using the verified total hydraulic-assist power. The hydraulic model now uses UNESCO-based temperature-dependent seawater density together with Darcy-Weisbach losses and the Swamee-Jain friction-factor approximation. Failure logic was also tightened so that scenarios fail when useful minimum velocity cannot be sustained or when the required thermal duty cannot be met. Under the verified rerun, the focused design window retained a `48.50%` PASS rate, of which `4.39%` corresponds to passive standalone cases and `44.10%` corresponds to hybrid retrofit-assist cases. The dominant failure mode remains `INSUFFICIENT_VELOCITY`, with a smaller secondary contribution from unmet thermal duty.
 
-### 3.6 Current conservatism and remaining weakness
+### 4.6 Current conservatism and remaining weakness
 
 The baseline model and auxiliary loads were tightened in the latest iteration to reduce over-optimistic savings. Even so, the remaining savings values are still high enough to justify caution. Therefore, all numerical savings results in this manuscript should be read as **provisional upper-bound research outputs**, not final deployment claims.
 
-## 4. Results
+## 5. Results
 
-### 4.1 Stage 1: broad screening
+### 5.1 Stage 1: broad screening
 
 Stage 1 screened `24,000` scenarios across a broad parameter space. The results were highly selective:
 
@@ -158,7 +170,7 @@ Stage 1 screened `24,000` scenarios across a broad parameter space. The results 
 
 The Stage 1 summary demonstrates that Hydra-Cool is not generically successful across arbitrary parameter combinations. Instead, it requires a constrained design window. The dominant failure mode in this stage was insufficient velocity, far exceeding all other failure categories.
 
-### 4.2 Stage 2: pruned candidate window
+### 5.2 Stage 2: pruned candidate window
 
 Stage 2 reduced the design space to `543` candidate scenarios selected for relevance to concept development. This step is important because it converts the campaign from exploratory brute force into directed engineering search.
 
@@ -171,7 +183,7 @@ Key Stage 2 findings:
 
 The most informative result from Stage 2 is not only the higher PASS fraction, but the preservation of the same qualitative message: success remains overwhelmingly hybrid, and low velocity remains the primary failure mechanism.
 
-### 4.3 Stage 3: high-resolution focus window
+### 5.3 Stage 3: high-resolution focus window
 
 Stage 3 evaluated `995,328` scenarios in the narrowed design window and provides the clearest current picture of feasibility:
 
@@ -182,7 +194,7 @@ Stage 3 evaluated `995,328` scenarios in the narrowed design window and provides
 
 This is the strongest result in the repository to date. It shows that once the design space is constrained to the most promising region, Hydra-Cool becomes plausible at meaningful scale. However, the success mode is still dominated by hybrid retrofit assist rather than passive standalone circulation.
 
-### 4.4 Best observed operating patterns
+### 5.4 Best observed operating patterns
 
 The strongest-performing Stage 3 cases cluster around:
 
@@ -204,11 +216,11 @@ The best currently observed Stage 3 PASS case has:
 
 That scenario is physically interesting because it reaches passive-standalone feasibility, but it should not be interpreted as representative of the whole design window.
 
-### 4.5 Dominant failure mode
+### 5.5 Dominant failure mode
 
 Across the campaign, the dominant hydraulic failure mechanism is **insufficient velocity**. This finding is consistent in Stage 1, Stage 2, and Stage 3. The implication is straightforward: the limiting factor is not the existence of buoyancy itself, but whether that buoyancy can support useful circulation speeds under realistic geometric and pressure-drop constraints. A smaller secondary failure family arises from scenarios that cannot satisfy the thermal duty even before a positive retrofit benefit can be established.
 
-### 4.6 Parameter importance
+### 5.6 Parameter importance
 
 Sensitivity analysis in the focused window identifies the following dominant variables:
 
@@ -219,29 +231,6 @@ Sensitivity analysis in the focused window identifies the following dominant var
 5. Delta T
 
 These variables should define the next iteration of design refinement, rather than indiscriminate expansion of scenario count.
-
-## 5. Discussion
-
-### 5.1 What the project currently supports
-
-The present evidence supports the following interpretation:
-
-- Hydra-Cool has a real and non-zero design window.
-- The most credible operating mode is **hybrid retrofit assist**.
-- Gravity and buoyancy can offset a substantial fraction of hydraulic losses in selected cases.
-- Passive standalone operation exists, but it is rare and should not be treated as the default design target.
-
-This is a scientifically useful outcome. It means the idea survives physical scrutiny, but in a narrower and more disciplined form than a purely passive narrative would suggest.
-
-### 5.2 What the results do not yet prove
-
-The current results do **not** yet prove that Hydra-Cool can deliver `80%` or `90%` energy savings in practice. Those numbers remain too high to accept without stronger calibration against real data-center cooling baselines, part-load effects, control logic, and balance-of-plant parasitics.
-
-In other words, the project has moved past the question of *whether there is any window at all*, but it has not yet earned the right to claim final savings percentages with publication-level confidence.
-
-### 5.3 Scientific meaning of negative net head
-
-Earlier versions of the analysis risked misinterpretation by treating negative net head as if it automatically invalidated useful scenarios. The current formulation resolves that ambiguity. Negative net head is incompatible with passive standalone circulation, but it can still be consistent with **valuable retrofit operation** if the system reduces net cooling energy when integrated into an existing plant. This clarification is one of the most important conceptual corrections in the repository.
 
 ## 6. Benchmark Positioning Against Conventional and Seawater-Based Cooling Architectures
 
@@ -292,7 +281,41 @@ The current manuscript should be read with the following limitations in mind:
 
 These are not minor caveats. They define the most important next steps before any claim of deployment-grade performance should be made.
 
-## 8. Conclusion
+## 8. Discussion
+
+### 8.1 Interpretation of the main findings
+
+The main result of the repository is that Hydra-Cool has a **non-zero but constrained** feasible design window. The progression from Stage 1 through Stage 3 is important because it shows that the concept does not become stronger through larger scenario counts alone; it becomes clearer through successive refinement. Stage 1 establishes that broad parameter exploration is dominated by failure. Stage 2 shows that targeted pruning improves the signal. Stage 3 demonstrates that, within a narrowed design window, a meaningful pass fraction is retained. The overall pattern supports the interpretation that Hydra-Cool is not a generally self-validating concept, but a conditional one whose plausibility depends on a narrow range of hydraulic and thermal conditions.
+
+The same staged structure also clarifies the operating-mode hierarchy. The dominant viable mode is `HYBRID_RETROFIT_ASSIST`, while passive standalone cases remain uncommon. That distinction is scientifically useful because it replaces an all-or-nothing narrative with a more realistic engineering interpretation: a system may still have value even if it does not eliminate active pumping altogether.
+
+### 8.2 Engineering meaning of the results
+
+The dominant failure mode, `INSUFFICIENT_VELOCITY`, has a straightforward hydraulic meaning. Buoyancy can exist without producing enough circulation to sustain useful thermal duty. This is why vertical lift, pipe count, pipe diameter, and heat-exchanger pressure drop emerge so strongly in the sensitivity results. Large hydraulic penalties or oversized flow area can reduce effective circulation velocity below the range required for meaningful cooling transport. In practical terms, Hydra-Cool appears to be limited less by the existence of buoyancy than by the ability to convert buoyancy into adequate loop flow.
+
+Heat-exchanger pressure drop is especially important because it consumes pressure head in exactly the portion of the loop where the retrofit concept is supposed to create benefit. If that loss becomes too large, the buoyancy contribution is quickly overwhelmed and the system reverts toward a pump-dominant loop. This helps explain why the design space must be narrowed rather than searched blindly: the underlying coupling among thermal lift, loop geometry, and hydraulic resistance is too strong for broad random sweeps to be informative on their own.
+
+### 8.3 Why hybrid retrofit assist is the most credible framing
+
+The current results support a more mature framing in which Hydra-Cool is treated as a **retrofit hydraulic-assist concept** rather than a passive-purity claim. From an engineering perspective, partial passive hydraulic contribution can still be valuable. A cooling retrofit does not need to eliminate pumping to be useful; it only needs to reduce the net burden of active cooling infrastructure in a repeatable and defensible way. This is why negative net head or non-zero pump assist should not automatically be interpreted as conceptual failure. What matters is whether buoyancy and gravity materially offset transport work within a realistic operating envelope.
+
+This framing is also more compatible with the way real infrastructure evolves. Large cooling plants are rarely replaced wholesale by highly idealized passive systems. They are more often improved through partial assistance, operational simplification, or reduced parasitic load. Under that lens, `HYBRID_RETROFIT_ASSIST` is not a fallback interpretation but the most credible current interpretation of the repository's results.
+
+### 8.4 Benchmark interpretation
+
+The benchmark package further clarifies this positioning. Hydra-Cool sits conceptually between conventional pump-dominant cooling architectures and uncommon passive-natural edge cases. Relative to a conventional mechanical plant, it appears promising as a coastal retrofit concept that could reduce cooling-energy burden if the hydraulic conditions are favorable. Relative to a pumped seawater loop, its distinguishing feature is not seawater use by itself, but the attempt to recover part of the hydraulic burden through buoyancy and gravity.
+
+At the same time, the benchmark should not be misread as proof. It is a **conceptual framing layer**, not a calibrated plant-level techno-economic comparison. The conventional and pumped seawater baselines are normalized engineering references, while the Hydra-Cool values are simulation-informed and conservatively framed. The benchmark therefore strengthens context, but it does not replace validation.
+
+### 8.5 Limits of the current claims
+
+The repository still supports only model-based claims. Energy savings remain a function of the current baseline cooling assumptions, auxiliary-load formulation, and steady-state hydraulic treatment. These assumptions may still remain optimistic, particularly when compared against the control sophistication and operational variability of real data center plants. In addition, the present work does not yet account for site-specific marine civil design, fouling growth, seasonal variability, startup and shutdown transients, control logic, or plant-integration penalties. For those reasons, Hydra-Cool should currently be understood as a simulation-based research concept rather than a validated cooling technology.
+
+### 8.6 What would be required for stronger validation
+
+Stronger validation would require several next steps. The baseline plant model should be calibrated more explicitly against measured or literature-supported cooling-plant performance. Dynamic controls and transient behavior should be added so that the concept is evaluated under startup, disturbance, and part-load conditions rather than steady-state operation alone. Marine site constraints, including intake civil works and coastal depth accessibility, should be integrated into scenario selection. Finally, stronger evidence would eventually require experimental or prototype-scale validation. None of those steps has yet been completed in the repository, but together they define a realistic path from conceptual simulation toward more defensible engineering assessment.
+
+## 9. Conclusion
 
 Hydra-Cool should currently be understood as a **buoyancy-assisted retrofit cooling concept** with a nontrivial but bounded design window. The simulation campaign indicates that the architecture is not broadly viable as a universal passive standalone solution. However, it does show repeated evidence that buoyancy and gravity can reduce the energy burden of cooling loops when the geometry, thermal lift, and hydraulic losses are tightly controlled.
 
@@ -333,3 +356,27 @@ The main stage outputs used in this manuscript are:
 - [hydra_cool_stage_1_screening_summary.md](/Users/obadadallo/Desktop/Cooling_System_Sim/cooling_project/output/hydra_cool_stage_1_screening_summary.md)
 - [hydra_cool_stage_2_candidates_summary.md](/Users/obadadallo/Desktop/Cooling_System_Sim/cooling_project/output/hydra_cool_stage_2_candidates_summary.md)
 - [hydra_cool_stage_3_focus_window_summary.md](/Users/obadadallo/Desktop/Cooling_System_Sim/cooling_project/output/hydra_cool_stage_3_focus_window_summary.md)
+
+## References
+
+[1] Fofonoff NP, Millard RC Jr. *Algorithms for Computation of Fundamental Properties of Seawater*. UNESCO Technical Papers in Marine Science No. 44. Paris: UNESCO; 1983.
+
+[2] The Green Grid. *Recommendations for Measuring and Reporting Overall Data Center Efficiency Version 2: Measuring PUE for Data Centers*. Portland, OR: The Green Grid; 2011.
+
+[3] Ebrahimi K, Jones GF, Fleischer AS. A review of data center cooling technology, operating conditions and the corresponding low-grade waste heat recovery opportunities. *Renew Sustain Energy Rev.* 2014;31:622-638. doi:10.1016/j.rser.2013.12.007
+
+[4] Zhang H, Shao S, Tian C, Zhang K. A review on thermosyphon and its integrated system with vapor compression for free cooling of data centers. *Renew Sustain Energy Rev.* 2018;81(P1):789-798. doi:10.1016/j.rser.2017.08.011
+
+[5] Masanet E, Shehabi A, Lei N, Smith S, Koomey J. Recalibrating global data center energy-use estimates. *Science.* 2020;367(6481):984-986. doi:10.1126/science.aba3758
+
+[6] Shehabi A, Smith SJ, Hubbard A, et al. *2024 United States Data Center Energy Usage Report*. Lawrence Berkeley National Laboratory; 2024. doi:10.71468/P1WC7Q
+
+[7] Swamee PK, Jain AK. Explicit equations for pipe-flow problems. *J Hydraul Div.* 1976;102(5):657-664. doi:10.1061/JYCEAJ.0004542
+
+[8] Pal S, Hanmaiahgari PR, Karney BW. An overview of the numerical approaches to water hammer modelling: The ongoing quest for practical and accurate numerical approaches. *Water.* 2021;13(11):1597. doi:10.3390/w13111597
+
+[9] Swart R, Dobson RT. Thermal-hydraulic simulation and evaluation of a natural circulation thermosyphon loop for a reactor cavity cooling system of a high-temperature reactor. *Nucl Eng Technol.* 2020;52(2):271-278. doi:10.1016/j.net.2019.07.031
+
+[10] Sanjivy K, Marc O, Davies N, Lucas F. Energy performance assessment of sea water air conditioning (SWAC) as a solution toward net zero carbon emissions: A case study in French Polynesia. *Energy Reports.* 2023;9:437-446. doi:10.1016/j.egyr.2022.11.201
+
+[11] Khalaj AH, Halgamuge SK. A review on efficient thermal management of air- and liquid-cooled data centers: From chip to the cooling system. *Applied Energy.* 2017;205:1165-1188. doi:10.1016/j.apenergy.2017.08.037

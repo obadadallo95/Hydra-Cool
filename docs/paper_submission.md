@@ -51,7 +51,11 @@ The novelty of this work lies in reframing buoyancy-driven cooling as a retrofit
 
 Data center cooling is an increasingly important systems-level energy challenge [2-6]. Hydra-Cool is proposed as a seawater-based buoyancy-assisted architecture designed to offset part of the cooling burden in coastal hyperscale facilities. The present work asks whether Hydra-Cool has a real, bounded retrofit design window.
 
-### 2. Methods
+### 2. Related Work
+
+The manuscript now situates Hydra-Cool relative to three established literature areas: data center cooling systems, natural-circulation and thermosiphon behavior, and seawater-based cooling infrastructure. This framing is important because Hydra-Cool is not simply a standard pumped seawater loop and not simply a passive thermosiphon. It is proposed as a retrofit hydraulic-assist architecture that combines buoyancy, gravity return, and seawater integration for coastal data center cooling.
+
+### 3. Methods
 
 The model combines thermal flow requirements, seawater density variation, buoyancy pressure, Darcy-Weisbach loss modeling, heat-exchanger pressure losses, pump assistance, and optional turbine recovery [1,3,7-9]. Scenarios are evaluated in three stages:
 
@@ -59,15 +63,15 @@ The model combines thermal flow requirements, seawater density variation, buoyan
 - Stage 2: candidate pruning (`543` scenarios)
 - Stage 3: focused design window (`995,328` scenarios)
 
-### 3. Results
+### 4. Results
 
 The broad screening stage produced a PASS rate of `8.65%`. After pruning, the candidate window showed a PASS rate of `24.13%`. In the focused design window, the PASS rate increased to `48.50%`, with `44.10%` of all cases belonging to the hybrid retrofit-assist class and `4.39%` belonging to the passive standalone class. Insufficient velocity was the dominant failure mode.
 
-### 4. Discussion
+### 5. Discussion
 
-The project currently supports Hydra-Cool most strongly as a hybrid retrofit assist layer. Passive standalone circulation exists in a small subset of the focus window, but it is not the dominant solution path. The current savings numbers remain too optimistic to treat as final and require stronger calibration against real cooling-plant baselines.
+The upgraded discussion now interprets the staged results as evidence of a non-zero but conditional design window. It explains why insufficient velocity dominates failure, why heat-exchanger pressure drop and hydraulic losses matter so strongly, and why `HYBRID_RETROFIT_ASSIST` is a more credible framing than passive-purity claims. It also integrates the benchmark-comparison package as a contextual tool rather than a calibrated techno-economic proof. The manuscript explicitly states that current energy savings remain model-based and that stronger validation would require tighter baseline calibration, dynamic modeling, site-aware marine constraints, and eventually prototype-scale evidence.
 
-### 4A. Benchmark Positioning
+### 5.1 Benchmark Positioning
 
 The repository now includes a benchmark-comparison package that positions Hydra-Cool against:
 
@@ -78,7 +82,7 @@ The repository now includes a benchmark-comparison package that positions Hydra-
 
 The benchmark layer is intentionally conservative and normalized. It should be read as a **positioning and framing device**, not as a plant-calibrated techno-economic comparison. In that framing, Hydra-Cool hybrid retrofit assist occupies a scientifically interesting middle ground: less pump-dominant than a fully pumped seawater loop, but much less validated than conventional mature cooling infrastructure.
 
-### 5. Conclusion
+### 6. Conclusion
 
 Hydra-Cool has a non-zero feasible design window and should currently be treated as a constrained retrofit energy-reduction concept rather than a universal passive cooling replacement. The dominant technical bottleneck is sustaining useful flow velocity under realistic hydraulic losses.
 
@@ -138,3 +142,5 @@ See:
 [9] Swart R, Dobson RT. Thermal-hydraulic simulation and evaluation of a natural circulation thermosyphon loop for a reactor cavity cooling system of a high-temperature reactor. *Nucl Eng Technol.* 2020;52(2):271-278. doi:10.1016/j.net.2019.07.031
 
 [10] Sanjivy K, Marc O, Davies N, Lucas F. Energy performance assessment of sea water air conditioning (SWAC) as a solution toward net zero carbon emissions: A case study in French Polynesia. *Energy Reports.* 2023;9:437-446. doi:10.1016/j.egyr.2022.11.201
+
+[11] Khalaj AH, Halgamuge SK. A review on efficient thermal management of air- and liquid-cooled data centers: From chip to the cooling system. *Applied Energy.* 2017;205:1165-1188. doi:10.1016/j.apenergy.2017.08.037

@@ -73,6 +73,8 @@ This confirms the current scientific framing of Hydra-Cool as a **hybrid retrofi
 - **Stage 3 focused design window:** `output/hydra_cool_stage_3_focus_window_summary.md`
 - **Publication figure set:** `output/publication_figures/`
 
+The manuscript package now includes a dedicated `Related Work` section and a stronger `Discussion` section so the repository reads more like a journal-ready engineering paper and less like an internal draft.
+
 ## Benchmark Positioning
 
 Hydra-Cool is now positioned against:

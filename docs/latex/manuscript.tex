@@ -46,6 +46,16 @@ Cooling energy is a major constraint on the growth of hyperscale digital infrast
 
 The concept is intentionally framed here as a retrofit-assist architecture. The primary question is not whether the loop can replace a conventional plant under fully passive conditions in all cases, but whether it can reduce the net cooling burden when integrated with an existing system.
 
+\section{Related Work}
+
+Hydra-Cool sits at the intersection of several established engineering literature streams. The first is the broad literature on data center cooling systems, including conventional mechanical plants, economizer strategies, and liquid cooling for high-density computing \citep{ebrahimi2014,masanet2020,shehabi2024,khalaj2017}. That literature provides the baseline context against which Hydra-Cool must be judged.
+
+The second stream concerns thermosiphons, natural circulation, and buoyancy-driven heat transport. These systems have been studied for decades because density differences can generate useful circulation under favorable geometric and thermal conditions \citep{zhang2018,swart2020}. This literature is highly relevant to Hydra-Cool, but it is rarely framed in the context of coastal data center retrofit hydraulics.
+
+The third stream is seawater-based cooling and coastal thermal infrastructure. Sea water air conditioning and related marine cooling concepts show that cold seawater can be an effective heat sink where geography and civil design permit \citep{sanjivy2023}. However, those approaches are normally discussed as pumped seawater infrastructure rather than buoyancy-assisted retrofit loops.
+
+Hydra-Cool overlaps with these streams but is not identical to any of them. It is not simply a standard pumped seawater loop, because it seeks hydraulic assistance from buoyancy and gravity. It is not simply a passive thermosiphon, because the dominant viable mode remains \texttt{HYBRID\_RETROFIT\_ASSIST}. The resulting research gap is narrow but meaningful: existing work covers seawater cooling, natural circulation, and thermosiphon behavior, but limited work frames these ideas explicitly as a retrofit-assist hydraulic architecture for large coastal data center cooling systems.
+
 \section{Physical Basis}
 
 The model relies on four standard engineering relationships:
@@ -150,11 +160,24 @@ Across the campaign, insufficient velocity was the dominant hydraulic failure me
   \item $\Delta T$
 \end{enumerate}
 
-\section{Discussion}
+\section{Benchmark Positioning}
 
-The present results support Hydra-Cool primarily as a hybrid retrofit-assist concept. Passive standalone operation is possible, but uncommon. This means the research should be interpreted as evidence for a constrained but real design window, not as proof of a universally passive cooling architecture.
+To strengthen research framing, Hydra-Cool was also positioned against a conventional mechanically driven cooling plant, a pumped seawater loop without buoyancy assistance, and uncommon passive-natural edge cases. This benchmark is intentionally conservative and normalized. It should be read as a positioning device rather than a calibrated techno-economic comparison.
 
-An equally important conclusion is methodological. The value of the campaign came from progressive filtering of scenarios, not from scenario count alone. The staged workflow provides a defensible path for future refinement: stronger baseline calibration, tighter auxiliary-load accounting, and site-aware candidate selection.
+\begin{table}[h]
+\centering
+\begin{tabular}{lllll}
+\toprule
+System & Relative burden & Pump dependence & Passive contribution & Maturity \\
+\midrule
+Conventional plant & 1.00 & Very high & Very low & High \\
+Pumped seawater loop & 0.70 & High & Low & Moderate to high \\
+Hydra-Cool hybrid assist & 0.30 & Moderate & High & Low / research-stage \\
+Hydra-Cool passive edge case & 0.18 & Very low & Very high & Very low \\
+\bottomrule
+\end{tabular}
+\caption{Normalized benchmark framing used to position Hydra-Cool relative to known alternatives.}
+\end{table}
 
 \section{Limitations}
 
@@ -169,6 +192,14 @@ The current work remains a research-stage feasibility study. Major limitations i
 \end{itemize}
 
 Accordingly, the present savings estimates should be interpreted as provisional rather than publication-final.
+
+\section{Discussion}
+
+The present results support Hydra-Cool primarily as a hybrid retrofit-assist concept. The staged workflow indicates that the design window is non-zero, but also that its feasibility only becomes clear after the parameter space is progressively narrowed. This means the research should be interpreted as evidence for a constrained but real design window, not as proof of a universally passive cooling architecture.
+
+Insufficient velocity dominates failure because buoyancy alone does not guarantee useful circulation. The most important parameters all influence whether buoyancy can be converted into sustained thermal transport rather than dissipated through hydraulic losses. This explains why heat-exchanger pressure drop, pipe count, and pipe diameter matter so strongly in the focused design window.
+
+The hybrid retrofit-assist framing is therefore the most credible interpretation. A cooling retrofit does not need to eliminate pumping entirely to be valuable; it only needs to reduce the net burden of active heat rejection in a repeatable and defensible way. In that sense, the benchmark comparison strengthens context but does not replace validation. Hydra-Cool should currently be understood as a simulation-based research concept whose claims remain limited by baseline uncertainty, steady-state modeling, and the absence of prototype-scale evidence.
 
 \section{Conclusion}
 
