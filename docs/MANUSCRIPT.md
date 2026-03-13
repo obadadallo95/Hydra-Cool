@@ -8,7 +8,7 @@
 
 ## Abstract
 
-Hydra-Cool is a buoyancy-assisted cooling concept intended to reduce the energy demand of hyperscale data center cooling systems by combining deep-water heat rejection, density-driven hydraulic assistance, elevated discharge storage, gravity return flow, and optional turbine recovery. The central research question is not whether Hydra-Cool can replace conventional cooling infrastructure outright, but whether it can serve as a high-impact retrofit assist layer that offsets a meaningful fraction of cooling energy in large coastal facilities.
+Hydra-Cool is a buoyancy-assisted cooling concept intended to reduce the energy demand of hyperscale data center cooling systems by combining deep-water heat rejection, density-driven hydraulic assistance, elevated discharge storage, gravity return flow, and optional turbine recovery. The central research question is not whether Hydra-Cool can replace conventional cooling infrastructure outright, but whether it can serve as a retrofit assist layer that offsets a meaningful fraction of cooling energy in large coastal facilities.
 
 We developed a staged simulation framework that evaluates Hydra-Cool using thermodynamic, hydraulic, and energy-balance constraints. The model computes required mass flow, buoyancy pressure, Darcy-Weisbach friction losses, heat-exchanger pressure losses, pump-assist burden, optional turbine recovery, and total assisted cooling power. Scenarios are classified by hydraulic feasibility and by their ability to reduce legacy cooling energy demand. The campaign was structured in three stages: a broad screening study (`24,000` scenarios), a pruned candidate window (`543` scenarios), and a focused high-resolution design window (`995,328` scenarios).
 
@@ -192,7 +192,7 @@ Stage 3 evaluated `995,328` scenarios in the narrowed design window and provides
 - Passive standalone PASS rate: `4.39%`
 - Hybrid retrofit-assist PASS rate: `44.10%`
 
-This is the strongest result in the repository to date. It shows that once the design space is constrained to the most promising region, Hydra-Cool becomes plausible at meaningful scale. However, the success mode is still dominated by hybrid retrofit assist rather than passive standalone circulation.
+This is the strongest result in the repository to date. It shows that once the design space is constrained to the most promising region, the current model retains a measurable feasible window. However, the success mode is still dominated by hybrid retrofit assist rather than passive standalone circulation.
 
 ### 5.4 Best observed operating patterns
 

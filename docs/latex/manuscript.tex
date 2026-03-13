@@ -58,7 +58,7 @@ Hydra-Cool overlaps with these streams but is not identical to any of them. It i
 
 \section{Physical Basis}
 
-The model relies on four standard engineering relationships:
+The model relies on five standard engineering relationships:
 
 \begin{enumerate}[label=\arabic*)]
   \item Heat-removal requirement:
@@ -73,9 +73,13 @@ The model relies on four standard engineering relationships:
   \[
   \Delta P_{\text{losses}} = \Delta P_{\text{friction}} + \Delta P_{\text{minor}} + \Delta P_{\text{HX}}
   \]
-  \item Retrofit energy balance:
+  \item Hybrid total power:
   \[
-  P_{\text{Hydra}} = P_{\text{pumps}} + P_{\text{aux}} - P_{\text{turbine}}
+  P_{\text{Hydra,total}} = P_{\text{pump,assist}} + P_{\text{aux}} - P_{\text{turbine}}
+  \]
+  \item Retrofit savings fraction:
+  \[
+  \eta_{\text{savings}} = \frac{P_{\text{baseline}} - P_{\text{Hydra,total}}}{P_{\text{baseline}}}
   \]
 \end{enumerate}
 
@@ -120,10 +124,12 @@ The focused window emphasized pipe diameters near 0.8--1.5 m, high vertical lift
 Scenarios are classified as:
 
 \begin{itemize}
-  \item \textbf{PASS}: hydraulically feasible and at least 10\% retrofit energy reduction
-  \item \textbf{MARGINAL}: hydraulically feasible and at least 2\% but less than 10\% reduction
-  \item \textbf{FAIL}: hydraulically infeasible or insufficient energy reduction
+  \item \textbf{PASS}: hydraulically feasible, satisfies the thermal duty, and achieves at least 10\% retrofit energy reduction
+  \item \textbf{MARGINAL}: hydraulically feasible, satisfies the thermal duty, and achieves at least 2\% but less than 10\% reduction
+  \item \textbf{FAIL}: hydraulically infeasible, unable to sustain the thermal duty, or insufficient in energy benefit
 \end{itemize}
+
+Scenarios fail explicitly when useful minimum velocity cannot be sustained or when achievable mass flow cannot support the required thermal duty. When both are present, insufficient velocity is reported as the primary failure mode.
 
 \section{Results}
 
