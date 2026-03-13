@@ -6,7 +6,7 @@
 
 ## Abstract
 
-Hydra-Cool is a buoyancy-assisted seawater cooling concept intended to reduce the electrical burden of hyperscale data center cooling through deep-water heat rejection, density-driven hydraulic assistance, elevated discharge storage, gravity return flow, and optional micro-hydropower recovery. The central question addressed in this study is not whether Hydra-Cool can operate as a universally passive replacement for conventional cooling plants, but whether it can function as a practical retrofit-assist layer that materially reduces cooling energy in large coastal facilities. The modeling framework combines heat-removal constraints, seawater density variation, buoyancy pressure generation, Darcy-Weisbach friction losses, heat-exchanger pressure losses, pump assistance, and optional turbine recovery [1,3,7-9]. A staged simulation campaign was used to progressively refine the design space: a broad screening study (`24,000` scenarios), a pruned candidate study (`543` scenarios), and a focused high-resolution design-window study (`995,328` scenarios). The current results indicate that passive standalone operation is rare, whereas hybrid retrofit assist dominates the viable solution space. In the focused design window, the model reports a `48.50%` PASS rate, with `2.64%` of all cases classified as passive standalone and `45.86%` classified as hybrid retrofit assist. The dominant failure mode across all stages is insufficient flow velocity. Sensitivity analysis shows that IT load, heat-exchanger pressure drop, number of pipes, pipe diameter, and temperature rise are the primary feasibility drivers. These results support the interpretation of Hydra-Cool as a constrained but nontrivial retrofit cooling pathway. However, the current energy-savings estimates remain too optimistic to be treated as publication-final and require stricter calibration against real data-center cooling baselines and auxiliary loads.
+Hydra-Cool is a buoyancy-assisted seawater cooling concept intended to reduce the electrical burden of hyperscale data center cooling through deep-water heat rejection, density-driven hydraulic assistance, elevated discharge storage, gravity return flow, and optional micro-hydropower recovery. The central question addressed in this study is not whether Hydra-Cool can operate as a universally passive replacement for conventional cooling plants, but whether it can function as a practical retrofit-assist layer that materially reduces cooling energy in large coastal facilities. The modeling framework combines heat-removal constraints, seawater density variation, buoyancy pressure generation, Darcy-Weisbach friction losses, heat-exchanger pressure losses, pump assistance, and optional turbine recovery [1,3,7-9]. A staged simulation campaign was used to progressively refine the design space: a broad screening study (`24,000` scenarios), a pruned candidate study (`543` scenarios), and a focused high-resolution design-window study (`995,328` scenarios). The current results indicate that passive standalone operation is rare, whereas hybrid retrofit assist dominates the viable solution space. In the focused design window, the verified rerun reports a `48.50%` PASS rate, with `4.39%` of all cases classified as passive standalone and `44.10%` classified as hybrid retrofit assist. The dominant failure mode across all stages is insufficient velocity, with a smaller secondary contribution from unmet thermal duty. Sensitivity analysis shows that IT load, heat-exchanger pressure drop, number of pipes, pipe diameter, and temperature rise are the primary feasibility drivers. These results support the interpretation of Hydra-Cool as a constrained but nontrivial retrofit cooling pathway. However, the current energy-savings estimates remain too optimistic to be treated as publication-final and require stricter calibration against real data-center cooling baselines and auxiliary loads.
 
 **Keywords:** data center cooling, seawater cooling, buoyancy-assisted flow, natural circulation, retrofit cooling, hydraulic feasibility
 
@@ -23,16 +23,16 @@ That distinction is essential. Earlier interpretations of buoyancy-assisted cool
 The Hydra-Cool model is built on standard engineering relationships:
 
 1. Heat removal requirement  
-   `m_dot = P_thermal / (Cp * Delta T)`
+   `\dot{m}_{req} = P_{thermal} / (C_p \Delta T)`
 
 2. Buoyancy pressure generation  
-   `Delta P_buoyancy = (rho_cold - rho_hot) g H`
+   `\Delta P_{buoyancy} = (\rho_{cold} - \rho_{hot}) g H`
 
 3. Hydraulic loss balance  
-   `Delta P_losses = Delta P_friction + Delta P_minor + Delta P_HX`
+   `\Delta P_{losses} = \Delta P_{friction} + \Delta P_{minor} + \Delta P_{HX}`
 
-4. Retrofit energy balance  
-   `P_Hydra = P_pumps + P_aux - P_turbine`
+4. Hybrid total power  
+   `P_{Hydra,total} = P_{pump,assist} + P_{aux} - P_{turbine}`
 
 Seawater density is approximated using standard UNESCO seawater property algorithms [1]. Hydraulic resistance is evaluated with a Darcy-Weisbach formulation and an explicit turbulent-flow friction-factor approximation derived from Swamee and Jain [7]. The treatment of hydraulic transients and water-hammer considerations in the broader research repository follows established numerical water-hammer literature [8]. Natural-circulation behavior is interpreted in the spirit of closed-loop thermosyphon analysis, where buoyancy and gravitational return govern the net circulation potential [9,10].
 
@@ -100,8 +100,8 @@ The focused Stage 3 window provides the clearest current view of feasibility:
 
 - PASS rate: `48.50%`
 - FAIL rate: `51.50%`
-- Passive standalone PASS rate: `2.64%`
-- Hybrid retrofit-assist PASS rate: `45.86%`
+- Passive standalone PASS rate: `4.39%`
+- Hybrid retrofit-assist PASS rate: `44.10%`
 
 This result indicates that Hydra-Cool possesses a real design window when the geometry and thermal conditions are chosen carefully. However, the dominant success mode remains **hybrid retrofit assist**, not passive standalone circulation.
 

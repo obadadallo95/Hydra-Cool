@@ -47,6 +47,17 @@ The current research direction treats Hydra-Cool primarily as a **hybrid retrofi
 | **Most important parameters** | IT load, HX drop, pipe count, pipe diameter, Delta T | These should drive design refinement |
 | **Simulation campaign** | Stage-based screening + candidate pruning + focus window | Scenarios are now narrowed progressively instead of explored blindly |
 
+## Verified Stage 3 Focus Window
+
+The latest verified Phase 2 rerun of the focused design window reports:
+
+- **PASS rate:** `48.50%`
+- **Passive-only PASS rate:** `4.39%`
+- **Hybrid retrofit-assist PASS rate:** `44.10%`
+- **Dominant failure mode:** `INSUFFICIENT_VELOCITY`
+
+This confirms the current scientific framing of Hydra-Cool as a **hybrid retrofit assist architecture first**, while retaining passive-natural circulation as a reportable but uncommon operating class.
+
 ## Latest Research Outputs
 
 - **Draft manuscript:** `docs/MANUSCRIPT.md`
@@ -130,6 +141,12 @@ python3 scripts/generate_publication_figures.py
 ```
 
 This exports PNG, SVG, and PDF figures to `output/publication_figures/`.
+
+### Running Physics Validation Checks
+
+```bash
+python3 -m unittest tests/test_hydraulic_physics.py
+```
 
 ## Phase Breakdown
 

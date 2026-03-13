@@ -10,9 +10,9 @@
 
 Hydra-Cool is a buoyancy-assisted cooling concept intended to reduce the energy demand of hyperscale data center cooling systems by combining deep-water heat rejection, density-driven hydraulic assistance, elevated discharge storage, gravity return flow, and optional turbine recovery. The central research question is not whether Hydra-Cool can replace conventional cooling infrastructure outright, but whether it can serve as a high-impact retrofit assist layer that offsets a meaningful fraction of cooling energy in large coastal facilities.
 
-We developed a staged simulation framework that evaluates Hydra-Cool using thermodynamic, hydraulic, and energy-balance constraints. The model computes mass flow requirement, buoyancy pressure, Darcy-Weisbach friction losses, heat-exchanger pressure losses, pump burden, optional turbine recovery, and net assisted cooling energy. Scenarios are classified by hydraulic feasibility and by their ability to reduce legacy cooling energy demand. The campaign was structured in three stages: a broad screening study (`24,000` scenarios), a pruned candidate window (`543` scenarios), and a focused high-resolution design window (`995,328` scenarios).
+We developed a staged simulation framework that evaluates Hydra-Cool using thermodynamic, hydraulic, and energy-balance constraints. The model computes required mass flow, buoyancy pressure, Darcy-Weisbach friction losses, heat-exchanger pressure losses, pump-assist burden, optional turbine recovery, and total assisted cooling power. Scenarios are classified by hydraulic feasibility and by their ability to reduce legacy cooling energy demand. The campaign was structured in three stages: a broad screening study (`24,000` scenarios), a pruned candidate window (`543` scenarios), and a focused high-resolution design window (`995,328` scenarios).
 
-The current results show that passive standalone operation is rare, while hybrid retrofit assist dominates the viable solution space. In the focused design window, the model reports a `48.5%` PASS rate, of which only `2.64%` corresponds to passive standalone circulation and `45.86%` corresponds to hybrid retrofit assist. Across all stages, the dominant hydraulic failure mode is insufficient flow velocity. Sensitivity analysis indicates that IT load, heat-exchanger pressure drop, number of pipes, pipe diameter, and temperature rise are the principal variables controlling feasibility. These findings suggest that Hydra-Cool is best interpreted as a retrofit energy-reduction architecture rather than a fully passive replacement cycle. The present draft also identifies a major research priority: further tightening the baseline cooling model and auxiliary load assumptions, because the current energy-savings estimates remain too optimistic for final publication.
+The current results show that passive standalone operation remains uncommon, while hybrid retrofit assist dominates the viable solution space. In the focused design window, the verified rerun reports a `48.50%` PASS rate, of which `4.39%` corresponds to passive standalone circulation and `44.10%` corresponds to hybrid retrofit assist. Across all stages, the dominant hydraulic failure mode is **insufficient velocity**, with a smaller residual contribution from unmet thermal duty. Sensitivity analysis indicates that IT load, heat-exchanger pressure drop, number of pipes, pipe diameter, and temperature rise are the principal variables controlling feasibility. These findings suggest that Hydra-Cool is best interpreted as a retrofit energy-reduction architecture rather than a fully passive replacement cycle. The present draft also identifies a major research priority: further tightening the baseline cooling model and auxiliary load assumptions, because the current energy-savings estimates remain too optimistic for final publication.
 
 **Keywords:** data center cooling, buoyancy-driven flow, thermosiphon assist, retrofit cooling, seawater cooling, hydraulic feasibility
 
@@ -31,21 +31,39 @@ This manuscript presents the current state of the Hydra-Cool simulation campaign
 
 ## 2. Physical Basis
 
-The Hydra-Cool model is built on four governing physical elements:
+The Hydra-Cool model is built on five governing physical elements:
 
 1. **Heat removal requirement**
-   `m_dot = P_thermal / (Cp * Delta T)`
+
+$$
+\dot{m}_{\mathrm{req}} = \frac{P_{\mathrm{thermal}}}{C_p \Delta T}
+$$
 
 2. **Buoyancy pressure generation**
-   `Delta P_buoyancy = (rho_cold - rho_hot) * g * H`
+
+$$
+\Delta P_{\mathrm{buoyancy}} = \left( \rho_{\mathrm{cold}} - \rho_{\mathrm{hot}} \right) g H
+$$
 
 3. **Hydraulic losses**
-   `Delta P_losses = Delta P_friction + Delta P_minor + Delta P_HX`
 
-4. **Retrofit energy balance**
-   `P_Hydra = P_pumps + P_aux - P_turbine`
+$$
+\Delta P_{\mathrm{losses}} = \Delta P_{\mathrm{friction}} + \Delta P_{\mathrm{minor}} + \Delta P_{\mathrm{HX}}
+$$
 
-Water density is approximated as a polynomial function of temperature. Friction losses are calculated using Darcy-Weisbach with a Swamee-Jain style friction factor approximation in the turbulent regime. The current model assumes seawater properties representative of ocean salinity and engineering-scale pipe roughness. The optional turbine is treated as a recoverable bonus layer, not a required condition for viability.
+4. **Hybrid Hydra-Cool total power**
+
+$$
+P_{\mathrm{Hydra,total}} = P_{\mathrm{pump,assist}} + P_{\mathrm{aux}} - P_{\mathrm{turbine}}
+$$
+
+5. **Retrofit savings fraction**
+
+$$
+\eta_{\mathrm{savings}} = \frac{P_{\mathrm{baseline}} - P_{\mathrm{Hydra,total}}}{P_{\mathrm{baseline}}}
+$$
+
+Water density is now evaluated with a UNESCO-based seawater density formulation at atmospheric pressure, using representative ocean salinity. Friction losses are calculated using Darcy-Weisbach with the Swamee-Jain approximation in the turbulent regime. The optional turbine is treated as a recoverable bonus layer, not a required condition for viability.
 
 Supporting derivations and assumptions are documented in:
 
@@ -102,11 +120,28 @@ Each scenario is evaluated for:
 
 The current classification is:
 
-- **PASS**: hydraulically feasible and achieves at least `10%` retrofit energy reduction
-- **MARGINAL**: hydraulically feasible and achieves at least `2%` but less than `10%` reduction
-- **FAIL**: hydraulically infeasible or does not reduce energy enough to justify the concept
+- **PASS**: hydraulically feasible, satisfies the thermal duty, and achieves at least `10%` positive retrofit energy reduction
+- **MARGINAL**: hydraulically feasible, satisfies the thermal duty, and achieves at least `2%` but less than `10%` reduction
+- **FAIL**: hydraulically infeasible, fails the thermal duty, or does not produce a positive retrofit benefit
 
-### 3.5 Current conservatism and remaining weakness
+Scenarios now fail explicitly when either of the following conditions is violated:
+
+- the required operating velocity falls below the minimum useful threshold,
+- or the achievable mass flow cannot sustain the required thermal duty.
+
+When both are present, the primary reported failure mode is **INSUFFICIENT_VELOCITY**.
+
+### 3.5 Phase 2 scientific hardening
+
+Phase 2 of the repository focused on scientific hardening of the Stage 3 focused design window. In this update, Hydra-Cool was formalized primarily as a `HYBRID_RETROFIT_ASSIST` architecture while retaining passive-natural circulation as a reportable but secondary operating class. The simulation engine was revised so that total assisted cooling power is evaluated as
+
+$$
+P_{\mathrm{Hydra,total}} = P_{\mathrm{pump,assist}} + P_{\mathrm{aux}} - P_{\mathrm{turbine}}
+$$
+
+and retrofit savings are computed relative to the baseline cooling burden using the verified total hydraulic-assist power. The hydraulic model now uses UNESCO-based temperature-dependent seawater density together with Darcy-Weisbach losses and the Swamee-Jain friction-factor approximation. Failure logic was also tightened so that scenarios fail when useful minimum velocity cannot be sustained or when the required thermal duty cannot be met. Under the verified rerun, the focused design window retained a `48.50%` PASS rate, of which `4.39%` corresponds to passive standalone cases and `44.10%` corresponds to hybrid retrofit-assist cases. The dominant failure mode remains `INSUFFICIENT_VELOCITY`, with a smaller secondary contribution from unmet thermal duty.
+
+### 3.6 Current conservatism and remaining weakness
 
 The baseline model and auxiliary loads were tightened in the latest iteration to reduce over-optimistic savings. Even so, the remaining savings values are still high enough to justify caution. Therefore, all numerical savings results in this manuscript should be read as **provisional upper-bound research outputs**, not final deployment claims.
 
@@ -142,8 +177,8 @@ Stage 3 evaluated `995,328` scenarios in the narrowed design window and provides
 
 - PASS rate: `48.50%`
 - FAIL rate: `51.50%`
-- Passive standalone PASS rate: `2.64%`
-- Hybrid retrofit-assist PASS rate: `45.86%`
+- Passive standalone PASS rate: `4.39%`
+- Hybrid retrofit-assist PASS rate: `44.10%`
 
 This is the strongest result in the repository to date. It shows that once the design space is constrained to the most promising region, Hydra-Cool becomes plausible at meaningful scale. However, the success mode is still dominated by hybrid retrofit assist rather than passive standalone circulation.
 
@@ -165,13 +200,13 @@ The best currently observed Stage 3 PASS case has:
 - Vertical lift: `250 m`
 - Delta T: `40 C`
 - HX pressure drop: `10 kPa`
-- Energy savings fraction: approximately `81.4%`
+- Energy savings fraction: approximately `82.0%`
 
 That scenario is physically interesting because it reaches passive-standalone feasibility, but it should not be interpreted as representative of the whole design window.
 
 ### 4.5 Dominant failure mode
 
-Across the campaign, the dominant hydraulic failure mechanism is **velocity too low**. This finding is consistent in Stage 1, Stage 2, and Stage 3. The implication is straightforward: the limiting factor is not the existence of buoyancy itself, but whether that buoyancy can support useful circulation speeds under realistic geometric and pressure-drop constraints.
+Across the campaign, the dominant hydraulic failure mechanism is **insufficient velocity**. This finding is consistent in Stage 1, Stage 2, and Stage 3. The implication is straightforward: the limiting factor is not the existence of buoyancy itself, but whether that buoyancy can support useful circulation speeds under realistic geometric and pressure-drop constraints. A smaller secondary failure family arises from scenarios that cannot satisfy the thermal duty even before a positive retrofit benefit can be established.
 
 ### 4.6 Parameter importance
 

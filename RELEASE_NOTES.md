@@ -19,6 +19,17 @@ The repository now includes:
 
 Hydra-Cool should currently be interpreted primarily as a **hybrid retrofit assist architecture**, not as a universally passive standalone cooling replacement.
 
+## Phase 2 Scientific Hardening
+
+This release also incorporates a Phase 2 scientific hardening pass on the focused design window:
+
+- pump-assist power is explicitly included in total assisted cooling energy,
+- seawater density is evaluated with a UNESCO-based temperature-dependent model,
+- hydraulic losses continue to use Darcy-Weisbach with the Swamee-Jain approximation,
+- failure logic now rejects scenarios that cannot sustain minimum useful velocity or required thermal duty.
+
+Under the verified Phase 2 rerun, the focused design window retains a `48.50%` PASS rate, with `4.39%` passive standalone cases and `44.10%` hybrid retrofit-assist cases. The dominant failure mode remains `INSUFFICIENT_VELOCITY`.
+
 ## Included in This Release
 
 ### Research and modeling

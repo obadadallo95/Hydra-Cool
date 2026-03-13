@@ -34,16 +34,44 @@ class StudyConfig:
     auxiliary_load_fraction: float = 0.008
     auxiliary_load_floor_w: float = 400e3
     pump_design_margin: float = 1.20
+    focused_final_min_it_load_mw: float = 150.0
+    focused_final_max_it_load_mw: float = 200.0
+    focused_final_min_pipe_diameter_m: float = 1.0
+    focused_final_max_pipe_diameter_m: float = 1.2
+    focused_final_min_delta_t_c: float = 32.0
 
 
 class HydraCoolHyperscaleStudy:
     def __init__(self, config: StudyConfig = None):
         self.config = config or StudyConfig()
+        self.latest_outputs: Dict[str, object] = {}
 
-    @staticmethod
-    def seawater_density_kgm3(temp_c: float) -> float:
-        """Polynomial fit documented in PHYSICS_BASIS.md."""
-        return 1028.17 - (0.0663 * temp_c) - (0.0038 * temp_c ** 2)
+    def seawater_density_kgm3(self, temp_c: float, salinity_ppt: float = None) -> float:
+        """
+        UNESCO 1983 density of seawater at atmospheric pressure.
+
+        Reference formulation:
+        Fofonoff NP, Millard RC Jr. UNESCO Technical Papers in Marine Science No. 44.
+        """
+        salinity = self.config.salinity_ppt if salinity_ppt is None else salinity_ppt
+        rho_w = (
+            999.842594
+            + 6.793952e-2 * temp_c
+            - 9.095290e-3 * temp_c ** 2
+            + 1.001685e-4 * temp_c ** 3
+            - 1.120083e-6 * temp_c ** 4
+            + 6.536332e-9 * temp_c ** 5
+        )
+        a = (
+            0.824493
+            - 4.0899e-3 * temp_c
+            + 7.6438e-5 * temp_c ** 2
+            - 8.2467e-7 * temp_c ** 3
+            + 5.3875e-9 * temp_c ** 4
+        )
+        b = -5.72466e-3 + 1.0227e-4 * temp_c - 1.6546e-6 * temp_c ** 2
+        c = 4.8314e-4
+        return rho_w + (a * salinity) + (b * (salinity ** 1.5)) + (c * salinity ** 2)
 
     @staticmethod
     def darcy_friction_factor(reynolds: float, roughness_m: float, diameter_m: float) -> float:
@@ -164,20 +192,20 @@ class HydraCoolHyperscaleStudy:
         rho_avg = (rho_cold + rho_hot) / 2.0
 
         it_load_w = it_load_mw * 1e6
-        mass_flow_kg_s = it_load_w / (cfg.cp_j_per_kgk * delta_t_c)
-        volumetric_flow_m3_s = mass_flow_kg_s / rho_avg
+        required_mass_flow_kg_s = it_load_w / (cfg.cp_j_per_kgk * delta_t_c)
+        required_volumetric_flow_m3_s = required_mass_flow_kg_s / rho_avg
 
         total_area_m2 = number_of_pipes * math.pi * (pipe_diameter_m ** 2) / 4.0
-        velocity_ms = volumetric_flow_m3_s / max(total_area_m2, 1e-12)
+        required_velocity_ms = required_volumetric_flow_m3_s / max(total_area_m2, 1e-12)
 
-        if velocity_ms < cfg.min_velocity_ms:
-            issues.append("VELOCITY_TOO_LOW")
-        if velocity_ms > cfg.max_velocity_ms:
-            issues.append("VELOCITY_TOO_HIGH")
+        if required_velocity_ms < cfg.min_velocity_ms:
+            issues.append("INSUFFICIENT_VELOCITY")
+        if required_velocity_ms > cfg.max_velocity_ms:
+            issues.append("EXCESSIVE_VELOCITY")
 
         loop_length_m = (2.0 * pipe_length_m) + (2.0 * vertical_lift_height_m)
         pipe_friction_pa, minor_losses_pa, reynolds = self.hydraulic_dynamic_losses_pa(
-            velocity_ms=velocity_ms,
+            velocity_ms=required_velocity_ms,
             rho_avg=rho_avg,
             pipe_diameter_m=pipe_diameter_m,
             loop_length_m=loop_length_m,
@@ -191,8 +219,9 @@ class HydraCoolHyperscaleStudy:
         total_loss_head_m = total_losses_pa / max(rho_avg * cfg.gravity_ms2, 1e-12)
         net_head_m = buoyancy_head_m - total_loss_head_m
 
-        required_flow_capacity_w = total_area_m2 * cfg.max_velocity_ms * rho_avg * cfg.cp_j_per_kgk * delta_t_c
-        required_flow_capacity_ratio = required_flow_capacity_w / max(it_load_w, 1e-9)
+        max_mass_flow_capacity_kg_s = total_area_m2 * cfg.max_velocity_ms * rho_avg
+        max_cooling_capacity_w = max_mass_flow_capacity_kg_s * cfg.cp_j_per_kgk * delta_t_c
+        required_flow_capacity_ratio = max_cooling_capacity_w / max(it_load_w, 1e-9)
 
         natural_velocity_ms = self.solve_natural_circulation_velocity(
             buoyancy_pressure_pa=buoyancy_pressure_pa,
@@ -206,43 +235,15 @@ class HydraCoolHyperscaleStudy:
         natural_mass_flow_kg_s = natural_volumetric_flow_m3_s * rho_avg
         natural_cooling_capacity_w = natural_mass_flow_kg_s * cfg.cp_j_per_kgk * delta_t_c
         natural_cooling_capacity_ratio = natural_cooling_capacity_w / max(it_load_w, 1e-9)
+        natural_velocity_margin_ms = natural_velocity_ms - cfg.min_velocity_ms
 
-        if natural_cooling_capacity_ratio < 1.0:
-            issues.append("INSUFFICIENT_NATURAL_CIRCULATION")
-
-        pump_pressure_deficit_pa = max(0.0, total_losses_pa - buoyancy_pressure_pa)
-        pump_power_w = (
-            (pump_pressure_deficit_pa * volumetric_flow_m3_s) / max(pump_efficiency, 1e-9)
-        ) * cfg.pump_design_margin
-
-        available_turbine_head_m = max(0.0, net_head_m)
-        turbine_power_w = (
-            turbine_efficiency
-            * rho_avg
-            * cfg.gravity_ms2
-            * volumetric_flow_m3_s
-            * available_turbine_head_m
-        )
-
-        auxiliary_power_w = max(cfg.auxiliary_load_floor_w, it_load_w * cfg.auxiliary_load_fraction)
-        hydra_net_power_w = pump_power_w + auxiliary_power_w - turbine_power_w
-        baseline_fraction = self.baseline_cooling_fraction(
-            it_load_mw=it_load_mw,
-            surface_temp_c=surface_temp_c,
-            deep_temp_c=deep_temp_c,
-        )
-        baseline_cooling_power_w = it_load_w * baseline_fraction
-        energy_savings_fraction = (
-            baseline_cooling_power_w - hydra_net_power_w
-        ) / max(baseline_cooling_power_w, 1e-9)
-        gravity_assist_fraction = min(1.0, buoyancy_pressure_pa / max(total_losses_pa, 1e-9))
-        pump_offset_fraction = min(1.0, buoyancy_pressure_pa / max(total_losses_pa, 1e-9))
-
-        required_flow_feasible = (
+        pump_assisted_feasible = (
             required_flow_capacity_ratio >= 1.0
-            and cfg.min_velocity_ms <= velocity_ms <= cfg.max_velocity_ms
+            and cfg.min_velocity_ms <= required_velocity_ms <= cfg.max_velocity_ms
             and "INVALID_TEMPERATURE_GRADIENT" not in issues
             and "INTAKE_TOO_SHORT_FOR_DEPTH" not in issues
+            and "INVALID_DELTA_T" not in issues
+            and "INVALID_PIPE_COUNT" not in issues
         )
 
         passive_natural_feasible = (
@@ -250,11 +251,70 @@ class HydraCoolHyperscaleStudy:
             and cfg.min_velocity_ms <= natural_velocity_ms <= cfg.max_velocity_ms
             and "INVALID_TEMPERATURE_GRADIENT" not in issues
             and "INTAKE_TOO_SHORT_FOR_DEPTH" not in issues
+            and "INVALID_DELTA_T" not in issues
+            and "INVALID_PIPE_COUNT" not in issues
+        )
+
+        if not passive_natural_feasible:
+            issues.append("INSUFFICIENT_NATURAL_CIRCULATION")
+
+        if not pump_assisted_feasible:
+            issues.append("THERMAL_DUTY_UNMET")
+
+        if passive_natural_feasible:
+            achieved_mass_flow_kg_s = natural_mass_flow_kg_s
+            achieved_volumetric_flow_m3_s = natural_volumetric_flow_m3_s
+            achieved_velocity_ms = natural_velocity_ms
+            achieved_cooling_capacity_ratio = natural_cooling_capacity_ratio
+        elif pump_assisted_feasible:
+            achieved_mass_flow_kg_s = required_mass_flow_kg_s
+            achieved_volumetric_flow_m3_s = required_volumetric_flow_m3_s
+            achieved_velocity_ms = required_velocity_ms
+            achieved_cooling_capacity_ratio = 1.0
+        else:
+            achieved_mass_flow_kg_s = min(required_mass_flow_kg_s, max_mass_flow_capacity_kg_s, natural_mass_flow_kg_s)
+            achieved_volumetric_flow_m3_s = achieved_mass_flow_kg_s / max(rho_avg, 1e-12)
+            achieved_velocity_ms = achieved_volumetric_flow_m3_s / max(total_area_m2, 1e-12)
+            achieved_cooling_capacity_ratio = (
+                achieved_mass_flow_kg_s * cfg.cp_j_per_kgk * delta_t_c
+            ) / max(it_load_w, 1e-9)
+
+        pump_pressure_deficit_pa = max(0.0, total_losses_pa - buoyancy_pressure_pa)
+        pump_assist_power_w = (
+            (pump_pressure_deficit_pa * required_volumetric_flow_m3_s) / max(pump_efficiency, 1e-9)
+        ) * cfg.pump_design_margin
+
+        available_turbine_head_m = max(0.0, net_head_m)
+        turbine_power_w = (
+            turbine_efficiency
+            * rho_avg
+            * cfg.gravity_ms2
+            * achieved_volumetric_flow_m3_s
+            * available_turbine_head_m
+        )
+
+        auxiliary_power_w = max(cfg.auxiliary_load_floor_w, it_load_w * cfg.auxiliary_load_fraction)
+        hydra_total_power_w = pump_assist_power_w + auxiliary_power_w - turbine_power_w
+        baseline_fraction = self.baseline_cooling_fraction(
+            it_load_mw=it_load_mw,
+            surface_temp_c=surface_temp_c,
+            deep_temp_c=deep_temp_c,
+        )
+        baseline_cooling_power_w = it_load_w * baseline_fraction
+        energy_savings_fraction = (
+            baseline_cooling_power_w - hydra_total_power_w
+        ) / max(baseline_cooling_power_w, 1e-9)
+        gravity_assist_fraction = min(1.0, buoyancy_pressure_pa / max(total_losses_pa, 1e-9))
+        pump_offset_fraction = min(1.0, buoyancy_pressure_pa / max(total_losses_pa, 1e-9))
+        positive_retrofit_benefit = energy_savings_fraction > 0.0
+        velocity_margin_ms = min(
+            required_velocity_ms - cfg.min_velocity_ms,
+            cfg.max_velocity_ms - required_velocity_ms,
         )
 
         if passive_natural_feasible:
             circulation_regime = "PASSIVE_NATURAL"
-        elif required_flow_feasible:
+        elif pump_assisted_feasible:
             circulation_regime = "RETROFIT_ASSIST"
         else:
             circulation_regime = "INFEASIBLE"
@@ -268,20 +328,23 @@ class HydraCoolHyperscaleStudy:
 
         turbine_recovery_active = bool(turbine_power_w > 1e3)
 
-        if not required_flow_feasible:
+        if not pump_assisted_feasible:
             classification = "FAIL"
+        elif not positive_retrofit_benefit:
+            classification = "FAIL"
+            issues.append("NO_POSITIVE_RETROFIT_BENEFIT")
         elif energy_savings_fraction >= 0.10:
             classification = "PASS"
         elif energy_savings_fraction >= cfg.marginal_savings_fraction:
             classification = "MARGINAL"
         else:
             classification = "FAIL"
-            issues.append("NO_NET_ENERGY_REDUCTION")
+            issues.append("LOW_RETROFIT_BENEFIT")
 
         constraint_flags = "|".join(issues) if issues else "NONE"
         failure_mode = "NONE"
         if classification == "FAIL":
-            failure_mode = issues[0] if issues else "UNSPECIFIED_FAIL"
+            failure_mode = self.select_failure_mode(issues)
 
         return {
             "deep_temp_c": deep_temp_c,
@@ -297,9 +360,11 @@ class HydraCoolHyperscaleStudy:
             "pipe_roughness_mm": pipe_roughness_mm,
             "turbine_efficiency": turbine_efficiency,
             "pump_efficiency": pump_efficiency,
-            "mass_flow_kg_s": mass_flow_kg_s,
-            "volumetric_flow_m3_s": volumetric_flow_m3_s,
-            "velocity_ms": velocity_ms,
+            "required_mass_flow_kg_s": required_mass_flow_kg_s,
+            "required_volumetric_flow_m3_s": required_volumetric_flow_m3_s,
+            "actual_mass_flow_kg_s": achieved_mass_flow_kg_s,
+            "actual_volumetric_flow_m3_s": achieved_volumetric_flow_m3_s,
+            "velocity_ms": achieved_velocity_ms,
             "rho_cold_kgm3": rho_cold,
             "rho_hot_kgm3": rho_hot,
             "buoyancy_pressure_pa": buoyancy_pressure_pa,
@@ -309,31 +374,58 @@ class HydraCoolHyperscaleStudy:
             "total_losses_pa": total_losses_pa,
             "net_head_m": net_head_m,
             "turbine_generation_mw": turbine_power_w / 1e6,
-            "pump_energy_mw": pump_power_w / 1e6,
+            "pump_assist_power_mw": pump_assist_power_w / 1e6,
+            "pump_energy_mw": pump_assist_power_w / 1e6,
             "aux_energy_mw": auxiliary_power_w / 1e6,
-            "hydra_net_energy_mw": hydra_net_power_w / 1e6,
+            "hydra_total_power_mw": hydra_total_power_w / 1e6,
+            "hydra_net_energy_mw": hydra_total_power_w / 1e6,
             "baseline_cooling_energy_mw": baseline_cooling_power_w / 1e6,
             "baseline_cooling_fraction": baseline_fraction,
             "energy_savings_fraction": energy_savings_fraction,
             "gravity_assist_fraction": gravity_assist_fraction,
             "pump_offset_fraction": pump_offset_fraction,
-            "required_velocity_ms": velocity_ms,
+            "positive_retrofit_benefit": positive_retrofit_benefit,
+            "required_velocity_ms": required_velocity_ms,
+            "velocity_margin_ms": velocity_margin_ms,
             "natural_velocity_ms": natural_velocity_ms,
+            "natural_velocity_margin_ms": natural_velocity_margin_ms,
             "required_flow_capacity_ratio": required_flow_capacity_ratio,
+            "actual_cooling_capacity_ratio": achieved_cooling_capacity_ratio,
             "natural_cooling_capacity_ratio": natural_cooling_capacity_ratio,
             "pressure_balance_ratio": buoyancy_pressure_pa / max(total_losses_pa, 1e-9),
+            "pump_fraction_of_baseline": pump_assist_power_w / max(baseline_cooling_power_w, 1e-9),
+            "pump_fraction_of_hydra_total": pump_assist_power_w / max(hydra_total_power_w, 1e-9),
             "classification": classification,
             "failure_mode": failure_mode,
             "constraint_flags": constraint_flags,
             "issue_count": len(issues),
-            "cooling_works": required_flow_feasible,
+            "cooling_works": pump_assisted_feasible,
             "passive_natural_feasible": passive_natural_feasible,
-            "requires_pump_assist": bool(required_flow_feasible and not passive_natural_feasible),
+            "requires_pump_assist": bool(pump_assisted_feasible and not passive_natural_feasible),
             "circulation_regime": circulation_regime,
             "success_layer": success_layer,
             "turbine_recovery_active": turbine_recovery_active,
-            "meets_10pct_target": bool(energy_savings_fraction >= 0.10 and required_flow_feasible),
+            "meets_10pct_target": bool(energy_savings_fraction >= 0.10 and pump_assisted_feasible and positive_retrofit_benefit),
         }
+
+    @staticmethod
+    def select_failure_mode(issues: List[str]) -> str:
+        priority_order = [
+            "INSUFFICIENT_VELOCITY",
+            "THERMAL_DUTY_UNMET",
+            "EXCESSIVE_VELOCITY",
+            "NO_POSITIVE_RETROFIT_BENEFIT",
+            "LOW_RETROFIT_BENEFIT",
+            "INSUFFICIENT_NATURAL_CIRCULATION",
+            "INVALID_TEMPERATURE_GRADIENT",
+            "INTAKE_TOO_SHORT_FOR_DEPTH",
+            "INVALID_DELTA_T",
+            "INVALID_PIPE_COUNT",
+        ]
+        for mode in priority_order:
+            if mode in issues:
+                return mode
+        return issues[0] if issues else "UNSPECIFIED_FAIL"
 
     def generate_parameter_sweep(self) -> pd.DataFrame:
         sweep_rows: List[Dict[str, float]] = []
@@ -462,6 +554,61 @@ class HydraCoolHyperscaleStudy:
         pruned = dataset[candidate_mask].copy()
         pruned["scenario_family"] = "stage_2_candidates"
         return pruned
+
+    def build_stage_3_final_results(self, focus_window: pd.DataFrame) -> pd.DataFrame:
+        cfg = self.config
+        final = focus_window[
+            (focus_window["classification"] == "PASS")
+            & (focus_window["success_layer"] == "HYBRID_RETROFIT_ASSIST")
+            & focus_window["it_load_mw"].between(cfg.focused_final_min_it_load_mw, cfg.focused_final_max_it_load_mw)
+            & focus_window["pipe_diameter_m"].between(
+                cfg.focused_final_min_pipe_diameter_m,
+                cfg.focused_final_max_pipe_diameter_m,
+            )
+            & (focus_window["delta_t_c"] >= cfg.focused_final_min_delta_t_c)
+        ].copy()
+
+        final = final.sort_values(
+            ["energy_savings_fraction", "velocity_margin_ms", "pump_fraction_of_baseline"],
+            ascending=[False, False, True],
+        ).reset_index(drop=True)
+        final.insert(0, "rank", np.arange(1, len(final) + 1))
+
+        selected_columns = [
+            "rank",
+            "classification",
+            "success_layer",
+            "circulation_regime",
+            "it_load_mw",
+            "pipe_diameter_m",
+            "number_of_pipes",
+            "vertical_lift_height_m",
+            "delta_t_c",
+            "hx_pressure_drop_kpa",
+            "deep_temp_c",
+            "surface_temp_c",
+            "required_mass_flow_kg_s",
+            "actual_mass_flow_kg_s",
+            "required_velocity_ms",
+            "velocity_ms",
+            "velocity_margin_ms",
+            "natural_velocity_ms",
+            "actual_cooling_capacity_ratio",
+            "natural_cooling_capacity_ratio",
+            "energy_savings_fraction",
+            "pump_fraction_of_baseline",
+            "pump_fraction_of_hydra_total",
+            "gravity_assist_fraction",
+            "pump_assist_power_mw",
+            "aux_energy_mw",
+            "turbine_generation_mw",
+            "hydra_total_power_mw",
+            "baseline_cooling_energy_mw",
+            "buoyancy_head_m",
+            "net_head_m",
+            "pressure_balance_ratio",
+        ]
+        return final[selected_columns]
 
     @staticmethod
     def build_summary(dataset: pd.DataFrame) -> Dict[str, object]:
@@ -645,6 +792,7 @@ class HydraCoolHyperscaleStudy:
         focus_sensitivity_path = os.path.join(output_dir, "hydra_cool_stage_3_focus_window_sensitivity.csv")
         focus_top_configs_path = os.path.join(output_dir, "hydra_cool_stage_3_focus_window_top_configs.csv")
         focus_markdown_path = os.path.join(output_dir, "hydra_cool_stage_3_focus_window_summary.md")
+        focus_final_results_path = os.path.join(output_dir, "hydra_cool_stage_3_final_results.csv")
 
         dataset.to_csv(dataset_path, index=False)
         sensitivity.to_csv(sensitivity_path, index=False)
@@ -675,8 +823,19 @@ class HydraCoolHyperscaleStudy:
         focus_window[focus_window["classification"].isin(["PASS", "MARGINAL"])].sort_values(
             "energy_savings_fraction", ascending=False
         ).head(250).to_csv(focus_top_configs_path, index=False)
+        self.build_stage_3_final_results(focus_window).to_csv(focus_final_results_path, index=False)
         with open(focus_summary_path, "w", encoding="utf-8") as handle:
             json.dump(focus_summary, handle, indent=2)
         self.write_markdown_summary(focus_summary, focus_sensitivity, focus_markdown_path, "Hydra-Cool Stage 3 Focus Window Summary")
+
+        self.latest_outputs = {
+            "stage_1_summary": summary,
+            "stage_1_sensitivity": sensitivity,
+            "stage_2_summary": stage_2_summary,
+            "stage_2_sensitivity": stage_2_sensitivity,
+            "stage_3_summary": focus_summary,
+            "stage_3_sensitivity": focus_sensitivity,
+            "stage_3_final_results_path": focus_final_results_path,
+        }
 
         return dataset, summary, sensitivity

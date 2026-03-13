@@ -10,24 +10,23 @@
 - Passive-natural PASS rate: 0.00%
 - Retrofit-assist PASS rate: 8.65%
 - Retrofit-assist MARGINAL rate: 0.00%
-- Success layers: {'NO_VALID_LAYER': 21837, 'HYBRID_RETROFIT_ASSIST': 2102, 'PASSIVE_STANDALONE': 61}
-- Mean energy savings fraction: 39.31%
-- Median energy savings fraction: 74.08%
-- Feasible mean energy savings fraction: 70.16%
-- Feasible median energy savings fraction: 75.65%
+- Success layers: {'NO_VALID_LAYER': 21781, 'HYBRID_RETROFIT_ASSIST': 2102, 'PASSIVE_STANDALONE': 117}
+- Mean energy savings fraction: 39.68%
+- Median energy savings fraction: 74.11%
+- Feasible mean energy savings fraction: 70.19%
+- Feasible median energy savings fraction: 75.68%
 
 ## Dominant Failure Modes
-- VELOCITY_TOO_LOW: 20984
-- VELOCITY_TOO_HIGH: 861
-- INVALID_TEMPERATURE_GRADIENT: 53
-- INSUFFICIENT_NATURAL_CIRCULATION: 25
+- INSUFFICIENT_VELOCITY: 21036
+- THERMAL_DUTY_UNMET: 862
+- NO_POSITIVE_RETROFIT_BENEFIT: 25
 
 ## Most Important Parameters
-- it_load_mw: importance=0.383
-- pipe_diameter_m: importance=0.227
-- delta_t_c: importance=0.224
-- hx_pressure_drop_kpa: importance=0.214
-- number_of_pipes: importance=0.159
+- it_load_mw: importance=0.381
+- delta_t_c: importance=0.228
+- pipe_diameter_m: importance=0.226
+- hx_pressure_drop_kpa: importance=0.212
+- vertical_lift_height_m: importance=0.166
 
 ## Best Scenario Snapshot
 - Classification: PASS
@@ -37,9 +36,9 @@
 - Diameter: 0.77 m
 - Vertical lift: 215.80 m
 - Baseline cooling fraction: 4.75%
-- Energy savings: 82.48%
-- Net head: -2.17 m
+- Energy savings: 82.53%
+- Net head: -1.98 m
 - Natural cooling capacity ratio: 0.00
-- Gravity assist fraction of hydraulic losses: 30.61%
+- Gravity assist fraction of hydraulic losses: 36.65%
 - Turbine recovery active: False
 - Interpretation: negative net head here means pump-assisted retrofit operation, not invalidity by itself.

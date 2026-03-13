@@ -17,6 +17,8 @@ def main():
     print("Hydra-Cool: running retrofit-assist scenario exploration...")
     study = HydraCoolHyperscaleStudy()
     _, summary, sensitivity = study.run(output_dir=OUTPUT_DIR)
+    stage_3_summary = study.latest_outputs.get("stage_3_summary", {})
+    stage_3_final_results_path = study.latest_outputs.get("stage_3_final_results_path")
 
     print(f"Scenarios evaluated: {summary['scenario_count']}")
     print(f"PASS rate: {summary['pass_rate']:.2%}")
@@ -28,6 +30,14 @@ def main():
     print("Top sensitivity drivers:")
     for _, row in sensitivity.head(5).iterrows():
         print(f"  - {row['parameter']}: importance={row['importance_score']:.3f}")
+    if stage_3_summary:
+        print("Stage 3 focus window:")
+        print(f"  - PASS rate: {stage_3_summary['pass_rate']:.2%}")
+        print(f"  - Passive-only PASS rate: {stage_3_summary['passive_natural_pass_rate']:.2%}")
+        print(f"  - Hybrid retrofit PASS rate: {stage_3_summary['hybrid_assisted_pass_rate']:.2%}")
+        print(f"  - Top failure mode: {next(iter(stage_3_summary['top_failure_modes']), 'NONE')}")
+    if stage_3_final_results_path:
+        print(f"Focused final results written to: {os.path.abspath(stage_3_final_results_path)}")
     print(f"Artifacts written to: {os.path.abspath(OUTPUT_DIR)}")
 
 
