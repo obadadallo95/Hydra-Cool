@@ -67,6 +67,17 @@ The broad screening stage produced a PASS rate of `8.65%`. After pruning, the ca
 
 The project currently supports Hydra-Cool most strongly as a hybrid retrofit assist layer. Passive standalone circulation exists in a small subset of the focus window, but it is not the dominant solution path. The current savings numbers remain too optimistic to treat as final and require stronger calibration against real cooling-plant baselines.
 
+### 4A. Benchmark Positioning
+
+The repository now includes a benchmark-comparison package that positions Hydra-Cool against:
+
+- conventional mechanically driven cooling plants,
+- pumped seawater loops without buoyancy assistance,
+- Hydra-Cool hybrid retrofit assist,
+- and uncommon Hydra-Cool passive-natural edge cases.
+
+The benchmark layer is intentionally conservative and normalized. It should be read as a **positioning and framing device**, not as a plant-calibrated techno-economic comparison. In that framing, Hydra-Cool hybrid retrofit assist occupies a scientifically interesting middle ground: less pump-dominant than a fully pumped seawater loop, but much less validated than conventional mature cooling infrastructure.
+
 ### 5. Conclusion
 
 Hydra-Cool has a non-zero feasible design window and should currently be treated as a constrained retrofit energy-reduction concept rather than a universal passive cooling replacement. The dominant technical bottleneck is sustaining useful flow velocity under realistic hydraulic losses.

@@ -28,10 +28,13 @@ The current research direction treats Hydra-Cool primarily as a **hybrid retrofi
 │   └── F_future/               # Immersion Cooling & Scalability
 │
 ├── assets/                     # Legacy generated charts & visualizations
+├── figures/                    # Benchmark-comparison figures for GitHub and papers
 ├── docs/                       # Technical Spec Sheets
 │   ├── PHYSICS_BASIS.md
 │   ├── ASSUMPTIONS.md
-│   └── PUBLICATION_FIGURES.md
+│   ├── PUBLICATION_FIGURES.md
+│   ├── BENCHMARK_COMPARISON.md
+│   └── benchmark_assumptions.md
 │
 ├── output/                     # Stage outputs, datasets, and publication figures
 └── STORY.md                    # Narrative project description
@@ -64,10 +67,38 @@ This confirms the current scientific framing of Hydra-Cool as a **hybrid retrofi
 - **Journal-style manuscript:** `docs/JOURNAL_STYLE_MANUSCRIPT.md`
 - **Submission-ready paper package:** `docs/paper_submission.md`
 - **LaTeX manuscript package:** `docs/latex/`
+- **Benchmark comparison package:** `docs/BENCHMARK_COMPARISON.md`
 - **Stage 1 screening:** `output/hydra_cool_stage_1_screening_summary.md`
 - **Stage 2 candidate window:** `output/hydra_cool_stage_2_candidates_summary.md`
 - **Stage 3 focused design window:** `output/hydra_cool_stage_3_focus_window_summary.md`
 - **Publication figure set:** `output/publication_figures/`
+
+## Benchmark Positioning
+
+Hydra-Cool is now positioned against:
+
+- conventional mechanically driven cooling plants,
+- pumped seawater loops without buoyancy assistance,
+- Hydra-Cool hybrid retrofit assist,
+- and uncommon Hydra-Cool passive-natural edge cases.
+
+The benchmark layer is intentionally conservative and is meant for **research framing**, not industrial proof. It reinforces the current project interpretation:
+
+- Hydra-Cool is most credible as a **hybrid retrofit-assist architecture**
+- passive standalone cases exist but remain uncommon
+- benchmark values are normalized and conceptual unless they are explicitly labeled as Hydra-Cool simulation outputs
+
+Benchmark resources:
+
+- [`docs/BENCHMARK_COMPARISON.md`](docs/BENCHMARK_COMPARISON.md)
+- [`docs/benchmark_assumptions.md`](docs/benchmark_assumptions.md)
+- [`docs/README_BENCHMARK_NOTES.md`](docs/README_BENCHMARK_NOTES.md)
+
+Benchmark figures:
+
+![Benchmark Energy Comparison](figures/benchmark_energy_comparison.png)
+
+![Benchmark Positioning Matrix](figures/benchmark_positioning_matrix.png)
 
 ## Citation
 

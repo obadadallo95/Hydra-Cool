@@ -243,7 +243,44 @@ In other words, the project has moved past the question of *whether there is any
 
 Earlier versions of the analysis risked misinterpretation by treating negative net head as if it automatically invalidated useful scenarios. The current formulation resolves that ambiguity. Negative net head is incompatible with passive standalone circulation, but it can still be consistent with **valuable retrofit operation** if the system reduces net cooling energy when integrated into an existing plant. This clarification is one of the most important conceptual corrections in the repository.
 
-## 6. Limitations
+## 6. Benchmark Positioning Against Conventional and Seawater-Based Cooling Architectures
+
+A benchmark comparison improves research credibility by placing Hydra-Cool relative to more familiar cooling architectures. The purpose of this comparison is not to claim that Hydra-Cool is already competitive with mature field-deployed plants, but to show where the concept sits within a recognizable engineering landscape.
+
+The benchmark package compares Hydra-Cool against:
+
+1. conventional cooling tower / mechanically driven cooling plants,
+2. pumped seawater loops without buoyancy assistance,
+3. Hydra-Cool hybrid retrofit assist,
+4. Hydra-Cool passive-natural edge cases.
+
+The benchmark values are explicitly mixed-source and transparent:
+
+- the conventional plant is the normalized reference baseline,
+- the pumped seawater loop is represented by conservative engineering estimate ranges,
+- the Hydra-Cool hybrid benchmark is simulation-informed but conservatively framed above the raw Stage 3 hybrid median,
+- and passive-natural Hydra-Cool is shown only as an uncommon edge-case class.
+
+| System | Evidence type | Relative cooling energy burden index* | Pump dependence | Passive contribution | Validation maturity |
+|--------|---------------|----------------------------------------|-----------------|---------------------|--------------------|
+| Conventional cooling tower / mechanical plant | Reference baseline | `1.00` | Very high | Very low | High |
+| Pumped seawater loop without buoyancy assistance | Engineering estimate | `0.70` central, `0.60–0.85` range | High | Low | Moderate to high |
+| Hydra-Cool hybrid retrofit assist | Stage 3 simulation-informed, conservatively framed | `0.30` central, `0.20–0.45` range | Moderate | High partial contribution | Low / research-stage |
+| Hydra-Cool passive-natural edge cases | Uncommon simulation edge-case framing | `0.18` central, `0.15–0.30` indicative range | Very low | Very high | Very low / exploratory |
+
+\*Normalized such that the conventional mechanical plant equals `1.00`.
+
+The comparison suggests that Hydra-Cool is most interesting as a middle-ground coastal concept between fully pump-dominant marine cooling and rare passive natural-circulation edge cases. Relative to a pumped seawater loop, the potential additional value of Hydra-Cool lies in **partial hydraulic assistance** rather than seawater access alone. Relative to a conventional mechanical plant, the concept appears promising as a constrained retrofit path, but not yet as a validated replacement architecture.
+
+This benchmark is intended as a positioning and framing device rather than a fully calibrated techno-economic comparison. Its main limitations are that the conventional and pumped seawater benchmarks are normalized engineering references rather than repository-calibrated field datasets, and that the Hydra-Cool benchmark still inherits uncertainty from the current baseline and auxiliary-load models.
+
+Supporting benchmark assets are available in:
+
+- [BENCHMARK_COMPARISON.md](BENCHMARK_COMPARISON.md)
+- [benchmark_assumptions.md](benchmark_assumptions.md)
+- [README_BENCHMARK_NOTES.md](README_BENCHMARK_NOTES.md)
+
+## 7. Limitations
 
 The current manuscript should be read with the following limitations in mind:
 
@@ -255,7 +292,7 @@ The current manuscript should be read with the following limitations in mind:
 
 These are not minor caveats. They define the most important next steps before any claim of deployment-grade performance should be made.
 
-## 7. Conclusion
+## 8. Conclusion
 
 Hydra-Cool should currently be understood as a **buoyancy-assisted retrofit cooling concept** with a nontrivial but bounded design window. The simulation campaign indicates that the architecture is not broadly viable as a universal passive standalone solution. However, it does show repeated evidence that buoyancy and gravity can reduce the energy burden of cooling loops when the geometry, thermal lift, and hydraulic losses are tightly controlled.
 
