@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use Hydra-Cool in academic work, please cite it as below."
-title: "Hydra-Cool: Buoyancy-Assisted Retrofit Cooling for Hyperscale Data Centers"
+title: "Hydra-Cool: Buoyancy-Assisted Seawater Retrofit Cooling and Feasible Design Windows for Hyperscale Data Centers"
 type: software
 authors:
   - family-names: "Dallo"
@@ -8,8 +8,8 @@ authors:
     affiliation: "Hydra-Cool Open Research Project"
 repository-code: "https://github.com/obadadallo95/Hydra-Cool"
 url: "https://github.com/obadadallo95/Hydra-Cool"
-doi: "10.5281/zenodo.18999303"
-version: "2026.1"
+doi: "10.5281/zenodo.19001040"
+version: "2026.2"
 date-released: 2026-03-13
 license: MIT
 abstract: >
@@ -34,4 +34,4 @@ preferred-citation:
   year: 2026
   journal: "Hydra-Cool Open Research Manuscript"
   url: "https://github.com/obadadallo95/Hydra-Cool"
-  doi: "10.5281/zenodo.18999303"
+  doi: "10.5281/zenodo.19001040"
